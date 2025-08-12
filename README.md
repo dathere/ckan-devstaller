@@ -4,7 +4,7 @@
 
 ## Quick start
 
-> [!WARNING]
+> [!CAUTION]
 > Make sure `ckan-devstaller` is run in a **new** Ubuntu 22.04 instance. Do NOT run `ckan-devstaller` in an existing instance that is important for your usage.
 
 Paste this into your new Ubuntu 22.04 instance's terminal:
