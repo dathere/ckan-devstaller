@@ -49,7 +49,7 @@ fn main() -> Result<()> {
             "\n{} Enabling SSH...",
             "2.".if_supports_color(Stdout, |text| text.on_magenta().white()),
         );
-        cmd!(sh, "sudo apt install openssh-server").run()?;
+        cmd!(sh, "sudo apt install openssh-server -y").run()?;
         println!(
             "{}",
             "✅ 2. Successfully enabled SSH."
