@@ -38,7 +38,8 @@ fn main() -> Result<()> {
                 .if_supports_color(Stdout, |text| text.on_bright_red().white())
         );
         cmd!(sh, "sudo apt update -y").run()?;
-        cmd!(sh, "sudo apt upgrade -y").run()?;
+        // Ignoring xrdp error with .ignore_status() for now
+        cmd!(sh, "sudo apt upgrade -y").ignore_status().run()?;
         println!(
             "{}",
             "✅ 1. Successfully ran update and upgrade commands."
@@ -46,13 +47,13 @@ fn main() -> Result<()> {
         );
 
         println!(
-            "\n{} Enabling SSH...",
+            "\n{} Installing curl and enabling SSH...",
             "2.".if_supports_color(Stdout, |text| text.on_magenta().white()),
         );
-        cmd!(sh, "sudo apt install openssh-server -y").run()?;
+        cmd!(sh, "sudo apt install curl openssh-server -y").run()?;
         println!(
             "{}",
-            "✅ 2. Successfully enabled SSH."
+            "✅ 2. Successfully installed curl and enabled SSH."
                 .if_supports_color(Stdout, |text| text.on_green().white())
         );
         let username = cmd!(sh, "whoami").read()?;
