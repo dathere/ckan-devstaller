@@ -110,7 +110,6 @@ fn main() -> Result<()> {
             "\n{} Downloading, installing, and starting ckan-compose...",
             "5.".if_supports_color(Stdout, |text| text.on_magenta().white()),
         );
-        println!("{}", "You may need to provide an arbitrary name then press ENTER to set defaults for the rest.".if_supports_color(Stdout, |text| text.on_bright_red().white()));
         sh.change_dir(format!("/home/{username}"));
         if !std::fs::exists(format!("/home/{username}/ckan-compose"))? {
             cmd!(sh, "git clone https://github.com/tino097/ckan-compose.git").run()?;
@@ -167,12 +166,61 @@ POSTGRES_PASSWORD=pass";
             "ckan -c /etc/ckan/default/ckan.ini sysadmin add {username}"
         )
         .run()?;
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini run").run()?;
         println!(
             "{}",
             "✅ 6. Installed CKAN 2.11.3 and started running instance."
                 .if_supports_color(Stdout, |text| text.on_green().white())
         );
+
+        println!(
+            "\n{} Enabling DataStore plugin, adding config URLs in /etc/ckan/default/ckan.ini and updating permissions...",
+            "7.".if_supports_color(Stdout, |text| text.on_magenta().white()),
+        );
+        let mut conf = ini::Ini::load_from_file("/etc/ckan/default/ckan.ini")?;
+        let app_main_section = conf.section_mut(Some("app:main")).unwrap();
+        let mut ckan_plugins = app_main_section.get("ckan.plugins").unwrap().to_string();
+        ckan_plugins.push_str(" datastore");
+        app_main_section.insert("ckan.plugins", ckan_plugins);
+        app_main_section.insert(
+            "ckan.datastore.write_url",
+            "postgresql://ckan_default:pass@localhost/datastore_default",
+        );
+        app_main_section.insert(
+            "ckan.datastore.read_url",
+            "postgresql://datastore_default:pass@localhost/datastore_default",
+        );
+        conf.write_to_file("/etc/ckan/default/ckan.ini")?;
+        let postgres_container_id = cmd!(
+            sh,
+            "sudo docker ps -aqf name=^ckan-devstaller-project-postgres$"
+        )
+        .read()?;
+        let set_permissions_output = cmd!(
+            sh,
+            "ckan -c /etc/ckan/default/ckan.ini datastore set-permissions"
+        )
+        .read()?;
+        std::fs::write("permissions.sql", set_permissions_output)?;
+        loop {
+            std::thread::sleep(std::time::Duration::from_secs(2));
+            if std::fs::exists("permissions.sql")? {
+                break
+            }
+        }
+        sh.change_dir(format!("/home/{username}"));
+        cmd!(
+            sh,
+            "sudo docker cp permissions.sql {postgres_container_id}:/permissions.sql"
+        )
+        .run()?;
+        cmd!(sh, "sudo docker exec {postgres_container_id} psql -U ckan_default --set ON_ERROR_STOP=1 -f permissions.sql").run()?;
+        println!(
+            "{}",
+            "✅ 7. Enabled DataStore plugin, set DataStore URLs in /etc/ckan/default/ckan.ini, and updated permissions."
+                .if_supports_color(Stdout, |text| text.on_green().white())
+        );
+
+        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini run").run()?;
     }
 
     Ok(())
