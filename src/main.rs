@@ -1,42 +1,65 @@
 use anyhow::Result;
+use clap::Parser;
 use inquire::Confirm;
-use owo_colors::{OwoColorize, Stream::Stdout};
+use owo_colors::{OwoColorize, Stream::Stdout, Style};
 use serde_json::json;
 use std::{path::PathBuf, str::FromStr};
 use xshell::cmd;
 use xshell_venv::{Shell, VirtualEnv};
 
+/// ckan-devstaller CLI
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Skip interactive steps and install CKAN with default features
+    #[arg(short, long)]
+    default: bool,
+}
+
 fn main() -> Result<()> {
+    let args = Args::parse();
+
+    // Color styles
+    let highlight_style = Style::new().on_blue().white();
+    let important_style = Style::new().on_bright_red().white();
+    let step_style = Style::new().on_magenta().white();
+    let success_style = Style::new().on_green().white();
+
     println!("Welcome to the ckan-devstaller!");
     println!(
         "ckan-devstaller is provided by datHere - {}\n",
-        "https://datHere.com".if_supports_color(Stdout, |text| text.on_blue().white()),
+        "https://datHere.com".if_supports_color(Stdout, |t| t.style(highlight_style)),
     );
     println!(
         "This installer should assist in setting up {} from a source installation along with ckan-compose (https://github.com/tino097/ckan-compose). If you have any issues, please report them at https://github.com/dathere/ckan-devstaller/issues.",
-        "CKAN 2.11.3".if_supports_color(Stdout, |text| text.on_blue().white())
+        "CKAN 2.11.3".if_supports_color(Stdout, |t| t.style(highlight_style))
     );
     println!(
         "{}",
         "This installer is only intended for a brand new installation of Ubuntu 22.04."
-            .if_supports_color(Stdout, |text| text.on_bright_red().white())
+            .if_supports_color(Stdout, |t| t.style(important_style))
     );
-    let ans = Confirm::new("Would you like to begin the installation?")
-        .with_default(false)
-        .prompt()?;
+
+    let ans = if args.default {
+        true
+    } else {
+        Confirm::new("Would you like to begin the installation?")
+            .with_default(false)
+            .prompt()?
+    };
 
     if ans {
         let sh = Shell::new()?;
         println!(
             "\n{} Running {} and {}...",
-            "1.".if_supports_color(Stdout, |text| text.on_magenta().white()),
-            "sudo apt update -y".if_supports_color(Stdout, |text| text.on_blue().white()),
-            "sudo apt upgrade -y".if_supports_color(Stdout, |text| text.on_blue().white())
+            "1.".if_supports_color(Stdout, |t| t.style(step_style)),
+            "sudo apt update -y".if_supports_color(Stdout, |t| t.style(highlight_style)),
+            "sudo apt upgrade -y".if_supports_color(Stdout, |t| t.style(highlight_style))
         );
         println!(
             "{}",
             "You may need to provide your sudo password."
-                .if_supports_color(Stdout, |text| text.on_bright_red().white())
+                .if_supports_color(Stdout, |t| t.style(important_style))
         );
         cmd!(sh, "sudo apt update -y").run()?;
         // Ignoring xrdp error with .ignore_status() for now
@@ -44,18 +67,18 @@ fn main() -> Result<()> {
         println!(
             "{}",
             "✅ 1. Successfully ran update and upgrade commands."
-                .if_supports_color(Stdout, |text| text.on_green().white())
+                .if_supports_color(Stdout, |t| t.style(success_style))
         );
 
         println!(
             "\n{} Installing curl and enabling SSH...",
-            "2.".if_supports_color(Stdout, |text| text.on_magenta().white()),
+            "2.".if_supports_color(Stdout, |t| t.style(step_style)),
         );
         cmd!(sh, "sudo apt install curl openssh-server -y").run()?;
         println!(
             "{}",
             "✅ 2. Successfully installed curl and enabled SSH."
-                .if_supports_color(Stdout, |text| text.on_green().white())
+                .if_supports_color(Stdout, |t| t.style(success_style))
         );
         let username = cmd!(sh, "whoami").read()?;
 
@@ -69,7 +92,7 @@ fn main() -> Result<()> {
         if !has_docker {
             println!(
                 "{} Installing Docker...",
-                "3.".if_supports_color(Stdout, |text| text.on_magenta().white()),
+                "3.".if_supports_color(Stdout, |t| t.style(step_style)),
             );
             cmd!(
                 sh,
@@ -80,7 +103,7 @@ fn main() -> Result<()> {
             println!(
                 "{}",
                 "✅ 3. Successfully installed Docker."
-                    .if_supports_color(Stdout, |text| text.on_green().white())
+                    .if_supports_color(Stdout, |t| t.style(success_style))
             );
         }
 
@@ -96,7 +119,7 @@ fn main() -> Result<()> {
 
         println!(
             "\n{} Installing Ahoy...",
-            "4.".if_supports_color(Stdout, |text| text.on_magenta().white()),
+            "4.".if_supports_color(Stdout, |t| t.style(step_style)),
         );
         cmd!(sh, "sudo curl -LO https://github.com/ahoy-cli/ahoy/releases/download/v2.5.0/ahoy-bin-linux-amd64").run()?;
         cmd!(sh, "mv ./ahoy-bin-linux-amd64 ./ahoy").run()?;
@@ -104,12 +127,12 @@ fn main() -> Result<()> {
         println!(
             "{}",
             "✅ 4. Successfully installed Ahoy."
-                .if_supports_color(Stdout, |text| text.on_green().white())
+                .if_supports_color(Stdout, |t| t.style(success_style))
         );
 
         println!(
             "\n{} Downloading, installing, and starting ckan-compose...",
-            "5.".if_supports_color(Stdout, |text| text.on_magenta().white()),
+            "5.".if_supports_color(Stdout, |t| t.style(step_style)),
         );
         sh.change_dir(format!("/home/{username}"));
         if !std::fs::exists(format!("/home/{username}/ckan-compose"))? {
@@ -125,12 +148,12 @@ POSTGRES_PASSWORD=pass";
         println!(
             "{}",
             "✅ 5. Successfully ran ckan-compose."
-                .if_supports_color(Stdout, |text| text.on_green().white())
+                .if_supports_color(Stdout, |t| t.style(success_style))
         );
 
         println!(
             "\n{} Installing CKAN 2.11.3...",
-            "6.".if_supports_color(Stdout, |text| text.on_magenta().white()),
+            "6.".if_supports_color(Stdout, |t| t.style(step_style)),
         );
         cmd!(sh, "sudo apt install python3-dev libpq-dev python3-pip python3-venv git-core redis-server -y").run()?;
         cmd!(sh, "sudo mkdir -p /usr/lib/ckan/default").run()?;
@@ -170,12 +193,12 @@ POSTGRES_PASSWORD=pass";
         println!(
             "{}",
             "✅ 6. Installed CKAN 2.11.3 and started running instance."
-                .if_supports_color(Stdout, |text| text.on_green().white())
+                .if_supports_color(Stdout, |t| t.style(success_style))
         );
 
         println!(
             "\n{} Enabling DataStore plugin, adding config URLs in /etc/ckan/default/ckan.ini and updating permissions...",
-            "7.".if_supports_color(Stdout, |text| text.on_magenta().white()),
+            "7.".if_supports_color(Stdout, |t| t.style(step_style)),
         );
         // TODO: use the ckan config-tool command instead of rust-ini
         let mut conf = ini::Ini::load_from_file("/etc/ckan/default/ckan.ini")?;
@@ -220,12 +243,12 @@ POSTGRES_PASSWORD=pass";
         println!(
             "{}",
             "✅ 7. Enabled DataStore plugin, set DataStore URLs in /etc/ckan/default/ckan.ini, and updated permissions."
-                .if_supports_color(Stdout, |text| text.on_green().white())
+                .if_supports_color(Stdout, |t| t.style(success_style))
         );
 
         println!(
             "\n{} Installing ckanext-scheming and DataPusher+ extensions...",
-            "8.".if_supports_color(Stdout, |text| text.on_magenta().white()),
+            "8.".if_supports_color(Stdout, |t| t.style(step_style)),
         );
         cmd!(
             sh,
@@ -357,13 +380,12 @@ ckanext.datapusher_plus.enable_form_redirect = true
         println!(
             "{}",
             "✅ 8. Installed ckanext-scheming and DataPusher+ extensions."
-                .if_supports_color(Stdout, |text| text.on_green().white())
+                .if_supports_color(Stdout, |t| t.style(success_style))
         );
 
         println!(
             "\n{}",
-            "✅ 9. Running CKAN instance..."
-                .if_supports_color(Stdout, |text| text.on_green().white())
+            "✅ 9. Running CKAN instance...".if_supports_color(Stdout, |t| t.style(success_style))
         );
         cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini run").run()?;
     }
@@ -381,7 +403,7 @@ fn get_config_from_prompts() -> Result<Config> {
         .with_help_message(
             format!(
                 "This step would install {}",
-                "openssh-server".if_supports_color(Stdout, |text| text.on_blue().white())
+                "openssh-server".if_supports_color(Stdout, |t| t.on_blue().white())
             )
             .as_str(),
         )

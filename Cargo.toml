@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0.99"
+clap = { version = "4.5.45", features = ["derive"] }
 inquire = "0.7.5"
 owo-colors = { version = "4.2.2", features = ["supports-colors"] }
 rust-ini = "0.21.2"
