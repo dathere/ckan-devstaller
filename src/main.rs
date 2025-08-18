@@ -50,6 +50,7 @@ fn main() -> Result<()> {
 
     if ans {
         let sh = Shell::new()?;
+        let username = cmd!(sh, "whoami").read()?;
         println!(
             "\n{} Running {} and {}...",
             "1.".if_supports_color(Stdout, |t| t.style(step_style)),
@@ -80,7 +81,6 @@ fn main() -> Result<()> {
             "✅ 2. Successfully installed curl and enabled SSH."
                 .if_supports_color(Stdout, |t| t.style(success_style))
         );
-        let username = cmd!(sh, "whoami").read()?;
 
         let dpkg_l_output = cmd!(sh, "dpkg -l").read()?;
         let has_docker = cmd!(sh, "grep docker")
@@ -121,6 +121,7 @@ fn main() -> Result<()> {
             "\n{} Installing Ahoy...",
             "4.".if_supports_color(Stdout, |t| t.style(step_style)),
         );
+        sh.change_dir(format!("/home/{username}"));
         cmd!(sh, "sudo curl -LO https://github.com/ahoy-cli/ahoy/releases/download/v2.5.0/ahoy-bin-linux-amd64").run()?;
         cmd!(sh, "mv ./ahoy-bin-linux-amd64 ./ahoy").run()?;
         cmd!(sh, "sudo chmod +x ./ahoy").run()?;
