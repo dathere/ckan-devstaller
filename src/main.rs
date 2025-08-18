@@ -17,8 +17,9 @@ fn main() -> Result<()> {
         "CKAN 2.11.3".if_supports_color(Stdout, |text| text.on_blue().white())
     );
     println!(
-        "This installer is also only intended for a brand new installation of {}.\n",
-        "Ubuntu 22.04".if_supports_color(Stdout, |text| text.on_blue().white())
+        "{}",
+        "This installer is only intended for a brand new installation of Ubuntu 22.04."
+            .if_supports_color(Stdout, |text| text.on_bright_red().white())
     );
     let ans = Confirm::new("Would you like to begin the installation?")
         .with_default(false)
