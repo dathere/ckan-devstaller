@@ -1,9 +1,8 @@
-use std::{path::PathBuf, str::FromStr};
-
 use anyhow::Result;
 use inquire::Confirm;
 use owo_colors::{OwoColorize, Stream::Stdout};
 use serde_json::json;
+use std::{path::PathBuf, str::FromStr};
 use xshell::cmd;
 use xshell_venv::{Shell, VirtualEnv};
 
@@ -14,7 +13,7 @@ fn main() -> Result<()> {
         "https://datHere.com".if_supports_color(Stdout, |text| text.on_blue().white()),
     );
     println!(
-        "This installer should assist in setting up {} from a source installation along with ckan-compose (https://github.com/tino097/ckan-compose).",
+        "This installer should assist in setting up {} from a source installation along with ckan-compose (https://github.com/tino097/ckan-compose). If you have any issues, please report them at https://github.com/dathere/ckan-devstaller/issues.",
         "CKAN 2.11.3".if_supports_color(Stdout, |text| text.on_blue().white())
     );
     println!(
