@@ -1,11 +1,18 @@
 # ckan-devstaller
 
-`ckan-devstaller` attempts to install CKAN 2.11.3 from source using [ckan-compose](https://github.com/tino097/ckan-compose), intended for development use in a new Ubuntu 22.04 instance.
+`ckan-devstaller` attempts to install CKAN 2.11.3 from source using [ckan-compose](https://github.com/tino097/ckan-compose), intended for development use in a new Ubuntu 22.04 instance. The following are also installed by default:
+
+- DataStore extension
+- ckanext-scheming extension
+- [DataPusher+ extension](https://github.com/dathere/datapusher-plus)
 
 ## Quick start
 
 > [!CAUTION]
 > Make sure `ckan-devstaller` is run in a **new** Ubuntu 22.04 instance. Do NOT run `ckan-devstaller` in an existing instance that is important for your usage.
+
+> [!NOTE]  
+> The `/etc/ckan/default/ckan.ini` config file will have its comments removed for now. There are plans to fix this in a future release of `ckan-devstaller`.
 
 Paste this into your new Ubuntu 22.04 instance's terminal:
 
