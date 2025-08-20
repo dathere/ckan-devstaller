@@ -18,7 +18,7 @@ The [`datatablesview-plus` extension](https://github.com/dathere/ckanext-datatab
 > Make sure `ckan-devstaller` is run in a **new** Ubuntu 22.04 instance. Do NOT run `ckan-devstaller` in an existing instance that is important for your usage.
 
 > [!WARNING]
-> If you are using Ubuntu 22.04 on VirtualBox, you'll want to add your user to the sudoers file before running the ckan-devstaller install script. Open a terminal in your virtual machine (VM), run `su -` and log in as the root user with the password you used to set up the VM, then type `sudo adduser <username> sudo` where `<username>` is your username then restart your VM and run the ckan-devstaller installer script.
+> If you are using Ubuntu 22.04 on VirtualBox, you may need to add your user to the sudoers file before running the ckan-devstaller install script. Open a terminal in your virtual machine (VM), run `su -` and log in as the root user with the password you used to set up the VM, then type `sudo adduser <username> sudo` where `<username>` is your username then restart your VM and run the ckan-devstaller installer script.
 
 > [!NOTE]  
 > The `/etc/ckan/default/ckan.ini` config file will have its comments removed for now. There are plans to fix this in a future release of `ckan-devstaller`.
