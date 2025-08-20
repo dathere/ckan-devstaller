@@ -9,7 +9,7 @@
 
 The [`datatablesview-plus` extension](https://github.com/dathere/ckanext-datatables-plus) is planned to be included in a future release.
 
-> ![INFO]
+> [!NOTE]
 > We plan on including customizability for enabling/disabling features in a future release.
 
 ## Quick start
