@@ -16,5 +16,6 @@ curl -LO https://github.com/dathere/ckan-devstaller/releases/download/0.1.0/ckan
 # Add execute permission to ckan-devstaller binary file
 sudo chmod +x ./ckan-devstaller
 
-# Run the ckan-devstaller binary file
-./ckan-devstaller
+# Run the ckan-devstaller binary file with defaults enabled
+./ckan-devstaller --default
+
