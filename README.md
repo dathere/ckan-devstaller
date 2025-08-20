@@ -10,12 +10,7 @@
 Paste this into your new Ubuntu 22.04 instance's terminal:
 
 ```bash
-cd ~/
-sudo apt update -y && sudo apt upgrade -y
-sudo apt install curl -y
-curl -LO https://github.com/dathere/ckan-devstaller/releases/download/0.1.0/ckan-devstaller
-sudo chmod +x ./ckan-devstaller
-./ckan-devstaller
+curl -fsSL https://github.com/dathere/ckan-devstaller/releases/download/0.1.0/install.bash | bash
 ```
 
 <img width="1271" height="183" alt="{8479CBE1-788E-48B3-AE9C-F3A51724520C}" src="https://github.com/user-attachments/assets/86373a89-895b-403c-a699-0cf3865ee100" />
