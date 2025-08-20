@@ -135,7 +135,6 @@ fn main() -> Result<()> {
             "\n{} Downloading, installing, and starting ckan-compose...",
             "5.".if_supports_color(Stdout, |t| t.style(step_style)),
         );
-        sh.change_dir(format!("/home/{username}"));
         if !std::fs::exists(format!("/home/{username}/ckan-compose"))? {
             cmd!(sh, "git clone https://github.com/tino097/ckan-compose.git").run()?;
         }
@@ -193,7 +192,7 @@ POSTGRES_PASSWORD=pass";
         .run()?;
         println!(
             "{}",
-            "✅ 6. Installed CKAN 2.11.3 and started running instance."
+            "✅ 6. Installed CKAN 2.11.3."
                 .if_supports_color(Stdout, |t| t.style(success_style))
         );
 
@@ -260,10 +259,13 @@ POSTGRES_PASSWORD=pass";
         let app_main_section = conf.section_mut(Some("app:main")).unwrap();
         let mut ckan_plugins = app_main_section.get("ckan.plugins").unwrap().to_string();
         ckan_plugins.push_str(" scheming_datasets");
-        app_main_section.insert("ckan.plugins", ckan_plugins);
-        app_main_section.insert("scheming.presets", "ckanext.scheming:presets.json");
-        app_main_section.insert("scheming.dataset_fallback", "false");
-        conf.write_to_file("/etc/ckan/default/ckan.ini")?;
+        cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main ckan.plugins={ckan_plugins}").run()?;
+        cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.presets=ckanext.scheming:presets.json").run()?;
+        cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.dataset_fallback=false").run()?;
+        // app_main_section.insert("ckan.plugins", ckan_plugins);
+        // app_main_section.insert("scheming.presets", "ckanext.scheming:presets.json");
+        // app_main_section.insert("scheming.dataset_fallback", "false");
+        // conf.write_to_file("/etc/ckan/default/ckan.ini")?;
         // Install DataPusher+
         cmd!(sh, "sudo apt install python3-virtualenv python3-dev python3-pip python3-wheel build-essential libxslt1-dev libxml2-dev zlib1g-dev git libffi-dev libpq-dev uchardet -y").run()?;
         sh.change_dir("/usr/lib/ckan/default/src");
@@ -280,12 +282,14 @@ POSTGRES_PASSWORD=pass";
         let app_main_section = conf.section_mut(Some("app:main")).unwrap();
         let mut ckan_plugins = app_main_section.get("ckan.plugins").unwrap().to_string();
         ckan_plugins.push_str(" datapusher_plus");
-        app_main_section.insert("ckan.plugins", ckan_plugins);
-        app_main_section.insert(
-            "scheming.dataset_schemas",
-            "ckanext.datapusher_plus:dataset-druf.yaml",
-        );
-        conf.write_to_file("/etc/ckan/default/ckan.ini")?;
+        cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main ckan.plugins={ckan_plugins}").run()?;
+        cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.dataset_schemas=ckanext.datapusher_plus:dataset-druf.yaml").run()?;
+        // app_main_section.insert("ckan.plugins", ckan_plugins);
+        // app_main_section.insert(
+        //     "scheming.dataset_schemas",
+        //     "ckanext.datapusher_plus:dataset-druf.yaml",
+        // );
+        // conf.write_to_file("/etc/ckan/default/ckan.ini")?;
         let dpp_default_config = r#"
 ckanext.datapusher_plus.use_proxy = false
 ckanext.datapusher_plus.download_proxy = 
@@ -335,7 +339,6 @@ ckanext.datapusher_plus.file_bin = /usr/bin/file
 ckanext.datapusher_plus.enable_druf = true
 ckanext.datapusher_plus.enable_form_redirect = true
 "#;
-
         std::fs::write("dpp_default_config.ini", dpp_default_config)?;
         cmd!(
             sh,
@@ -361,9 +364,7 @@ ckanext.datapusher_plus.enable_form_redirect = true
             "/usr/lib/ckan/default/src/ckan/config/resource_formats.json",
             serde_json::to_string(&resource_formats_val)?,
         )?;
-        // let token_command_output = cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user token add {username} dpplus | tail -n 1 | tr -d '\t'").read()?;
-        // let dpp_api_token = duct::cmd!("tr", "-d", "'\t").stdin_bytes(duct::cmd!("tail", "-n", "1").stdin_bytes(token_command_output)).read()?;
-        cmd!(sh, "sudo locale-gen en_US.UTF-8").run()?;
+        cmd!(sh, "sudo locale-gen").run()?;
         cmd!(sh, "sudo update-locale").run()?;
         let token_command_output = cmd!(
             sh,
