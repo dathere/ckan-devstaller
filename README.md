@@ -2,8 +2,8 @@
 
 `ckan-devstaller` attempts to install CKAN 2.11.3 from source using [ckan-compose](https://github.com/tino097/ckan-compose), intended for development use in a new Ubuntu 22.04 instance. The following are also installed by default:
 
-- DataStore extension
-- ckanext-scheming extension
+- [DataStore extension](https://docs.ckan.org/en/2.11/maintaining/datastore.html)
+- [ckanext-scheming extension](https://github.com/ckan/ckanext-scheming)
 - [DataPusher+ extension](https://github.com/dathere/datapusher-plus)
 - [DRUF mode](https://github.com/dathere/datapusher-plus?tab=readme-ov-file#druf-dataset-resource-upload-first-workflow)
 
