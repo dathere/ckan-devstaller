@@ -5,6 +5,9 @@
 - DataStore extension
 - ckanext-scheming extension
 - [DataPusher+ extension](https://github.com/dathere/datapusher-plus)
+- [DRUF mode](https://github.com/dathere/datapusher-plus?tab=readme-ov-file#druf-dataset-resource-upload-first-workflow)
+
+The [`datatablesview-plus` extension](https://github.com/dathere/ckanext-datatables-plus) is planned to be included in a future release.
 
 ## Quick start
 
