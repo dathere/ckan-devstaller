@@ -364,7 +364,7 @@ ckanext.datapusher_plus.enable_form_redirect = true
             "/usr/lib/ckan/default/src/ckan/config/resource_formats.json",
             serde_json::to_string(&resource_formats_val)?,
         )?;
-        cmd!(sh, "sudo locale-gen").run()?;
+        cmd!(sh, "sudo locale-gen en_US.UTF-8").run()?;
         cmd!(sh, "sudo update-locale").run()?;
         let token_command_output = cmd!(
             sh,
@@ -373,7 +373,7 @@ ckanext.datapusher_plus.enable_form_redirect = true
         .read()?;
         let tail_output = cmd!(sh, "tail -n 1").stdin(token_command_output).read()?;
         let dpp_api_token = cmd!(sh, "tr -d '\t'").stdin(tail_output).read()?;
-        cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini ckanext.datapusher_plus.api_token={dpp_api_token}").run()?;
+        cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini ckanext.datapusher_plus.api_token={dpp_api_token}").env("LC_ALL", "en_US.UTF-8").run()?;
         cmd!(
             sh,
             "ckan -c /etc/ckan/default/ckan.ini db upgrade -p datapusher_plus"
