@@ -1,5 +1,6 @@
 use anyhow::Result;
 use clap::Parser;
+use human_panic::{metadata, setup_panic};
 use inquire::Confirm;
 use owo_colors::{OwoColorize, Stream::Stdout, Style};
 use serde_json::json;
@@ -17,6 +18,10 @@ struct Args {
 }
 
 fn main() -> Result<()> {
+    setup_panic!(metadata!()
+        .homepage("https://dathere.com")
+        .support("- Create a support ticket at https://support.dathere.com or report an issue at https://github.com/dathere/ckan-devstaller"));
+
     let args = Args::parse();
 
     // Color styles
@@ -192,8 +197,7 @@ POSTGRES_PASSWORD=pass";
         .run()?;
         println!(
             "{}",
-            "✅ 6. Installed CKAN 2.11.3."
-                .if_supports_color(Stdout, |t| t.style(success_style))
+            "✅ 6. Installed CKAN 2.11.3.".if_supports_color(Stdout, |t| t.style(success_style))
         );
 
         println!(
@@ -259,7 +263,11 @@ POSTGRES_PASSWORD=pass";
         let app_main_section = conf.section_mut(Some("app:main")).unwrap();
         let mut ckan_plugins = app_main_section.get("ckan.plugins").unwrap().to_string();
         ckan_plugins.push_str(" scheming_datasets");
-        cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main ckan.plugins={ckan_plugins}").run()?;
+        cmd!(
+            sh,
+            "ckan config-tool /etc/ckan/default/ckan.ini -s app:main ckan.plugins={ckan_plugins}"
+        )
+        .run()?;
         cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.presets=ckanext.scheming:presets.json").run()?;
         cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.dataset_fallback=false").run()?;
         // app_main_section.insert("ckan.plugins", ckan_plugins);
@@ -282,7 +290,11 @@ POSTGRES_PASSWORD=pass";
         let app_main_section = conf.section_mut(Some("app:main")).unwrap();
         let mut ckan_plugins = app_main_section.get("ckan.plugins").unwrap().to_string();
         ckan_plugins.push_str(" datapusher_plus");
-        cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main ckan.plugins={ckan_plugins}").run()?;
+        cmd!(
+            sh,
+            "ckan config-tool /etc/ckan/default/ckan.ini -s app:main ckan.plugins={ckan_plugins}"
+        )
+        .run()?;
         cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.dataset_schemas=ckanext.datapusher_plus:dataset-druf.yaml").run()?;
         // app_main_section.insert("ckan.plugins", ckan_plugins);
         // app_main_section.insert(
