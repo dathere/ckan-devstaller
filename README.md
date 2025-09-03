@@ -5,12 +5,8 @@
 - [DataStore extension](https://docs.ckan.org/en/2.11/maintaining/datastore.html)
 - [ckanext-scheming extension](https://github.com/ckan/ckanext-scheming)
 - [DataPusher+ extension](https://github.com/dathere/datapusher-plus)
-- [DRUF mode](https://github.com/dathere/datapusher-plus?tab=readme-ov-file#druf-dataset-resource-upload-first-workflow)
 
-The [`datatablesview-plus` extension](https://github.com/dathere/ckanext-datatables-plus) is planned to be included in a future release.
-
-> [!NOTE]
-> We plan on including customizability for enabling/disabling features in a future release.
+[DRUF mode](https://github.com/dathere/datapusher-plus?tab=readme-ov-file#druf-dataset-resource-upload-first-workflow) is available but disabled by default. The [`datatablesview-plus` extension](https://github.com/dathere/ckanext-datatables-plus) is planned to be included in a future release.
 
 ## Quick start
 
