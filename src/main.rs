@@ -203,7 +203,7 @@ fn main() -> Result<()> {
             cmd!(sh, "git clone https://github.com/tino097/ckan-compose.git").run()?;
         }
         sh.change_dir(format!("/home/{username}/ckan-compose"));
-        cmd!(sh, "git switch solr-9-impl").run()?;
+        cmd!(sh, "git switch ckan-devstaller").run()?;
         let env_data = "PROJECT_NAME=ckan-devstaller-project
 DATASTORE_READONLY_PASSWORD=pass
 POSTGRES_PASSWORD=pass";
