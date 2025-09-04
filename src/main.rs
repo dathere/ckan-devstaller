@@ -260,12 +260,12 @@ fn main() -> Result<()> {
         let sysadmin_email = config.sysadmin.email;
         let existing_users = cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user list").read()?;
         println!("Existing users: {}", existing_users);
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user remove existing_users").run().ok();
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini search-index clear").run().ok();
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add ckan_admin password=password email=ckan_admin@localhost").run()?;
+        //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user remove existing_users").run().ok();
+        //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini search-index clear").run().ok();
+        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add sysadmin_username password=password email=sysadmin_username@localhost").run()?;
         cmd!(
             sh,
-            "ckan -c /etc/ckan/default/ckan.ini sysadmin add ckan_admin"
+            "ckan -c /etc/ckan/default/ckan.ini sysadmin add sysadmin_username"
         )
         .run()?;
         println!(
