@@ -55,7 +55,7 @@ fn main() -> Result<()> {
     let default_config_text = r#"
     The default configuration for ckan-devstaller does the following:
     - Install openssh-server to enable SSH access
-    - Install ckan-compose (https://github.com/tino097/ckan-compose) which sets up the CKAN backend (PostgreSQL, SOLR, Redis)
+    - Install ckan-compose (https://github.com/a5dur/ckan-compose) which sets up the CKAN backend (PostgreSQL, SOLR, Redis)
     - Install CKAN v2.11.3
     - Install the DataStore extension
     - Install the ckanext-scheming extension
@@ -200,7 +200,7 @@ fn main() -> Result<()> {
             step_text("5."),
         );
         if !std::fs::exists(format!("/home/{username}/ckan-compose"))? {
-            cmd!(sh, "git clone https://github.com/tino097/ckan-compose.git").run()?;
+            cmd!(sh, "git clone --branch solr-9-impl https://github.com/a5dur/ckan-compose.git").run()?;
         }
         sh.change_dir(format!("/home/{username}/ckan-compose"));
         cmd!(sh, "git switch ckan-devstaller").run()?;
