@@ -268,7 +268,7 @@ fn main() -> Result<()> {
             "{}",
             success_text(format!("✅ 6. Installed CKAN {}.", config.ckan_version).as_str())
         );
-
+        
         if config.extension_datapusher_plus {
             println!(
                 "\n{} Enabling DataStore plugin, adding config URLs in /etc/ckan/default/ckan.ini and updating permissions...",
@@ -299,17 +299,20 @@ fn main() -> Result<()> {
                 "ckan -c /etc/ckan/default/ckan.ini datastore set-permissions"
             )
             .read()?;
-            std::fs::write("permissions.sql", set_permissions_output)?;
+            
+            // Use absolute path for permissions.sql file
+            let permissions_file = format!("/home/{username}/ckan-compose/permissions.sql");
+            std::fs::write(&permissions_file, set_permissions_output)?;
             loop {
                 std::thread::sleep(std::time::Duration::from_secs(2));
-                if std::fs::exists("permissions.sql")? {
+                if std::fs::exists(&permissions_file)? {
                     break;
                 }
             }
-            sh.change_dir(format!("/home/{username}"));
+            // Removed sh.change_dir line - no longer needed
             cmd!(
                 sh,
-                "sudo docker cp permissions.sql {postgres_container_id}:/permissions.sql"
+                "sudo docker cp {permissions_file} {postgres_container_id}:/permissions.sql"
             )
             .run()?;
             cmd!(sh, "sudo docker exec {postgres_container_id} psql -U ckan_default --set ON_ERROR_STOP=1 -f permissions.sql").run()?;
@@ -319,6 +322,8 @@ fn main() -> Result<()> {
                     "✅ 7. Enabled DataStore plugin, set DataStore URLs in /etc/ckan/default/ckan.ini, and updated permissions."
                 )
             );
+        }
+
 
             println!(
                 "{}",
