@@ -259,19 +259,12 @@ fn main() -> Result<()> {
         let sysadmin_password = config.sysadmin.password;
         let sysadmin_email = config.sysadmin.email;
         let existing_users = cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user list").read()?;
-        let user_check = cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user show {username}").run();
-        match user_check {
-            Ok(_) => {
-                // User exists, just make sure they're a sysadmin
-                cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini sysadmin add {username}").run().ok();
-                println!("User {username} already exists, ensured sysadmin privileges.");
-            },
-            Err(_) => {
-                // User doesn't exist, create them
-                cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add {username} password=password email={username}@localhost").run()?;
-                cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini sysadmin add {username}").run()?;
-            }
-        }
+        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini search-index clear").run().ok();
+        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add {username} password=password email={username}@localhost").run()?;
+        cmd!(
+            sh,
+            "ckan -c /etc/ckan/default/ckan.ini sysadmin add admin_user"
+        )
         .run()?;
         println!(
             "{}",
