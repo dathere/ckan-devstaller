@@ -221,6 +221,7 @@ fn main() -> Result<()> {
             config.ckan_version
         );
         cmd!(sh, "sudo apt install python3-dev libpq-dev python3-pip python3-venv git-core redis-server -y").run()?;
+        cmd!(sh, "sudo rm -rf /usr/lib/ckan").run().ok(); // Remove whatever exists (ok() to ignore if nothing exists)
         cmd!(sh, "sudo mkdir -p /usr/lib/ckan/default").run()?;
         cmd!(sh, "sudo chown {username} /usr/lib/ckan/default").run()?;
         let venv_path = PathBuf::from_str("/usr/lib/ckan/default")?;
