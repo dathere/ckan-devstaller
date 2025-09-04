@@ -208,6 +208,9 @@ fn main() -> Result<()> {
         DATASTORE_READONLY_PASSWORD=pass
         POSTGRES_PASSWORD=pass";
         std::fs::write(format!("/home/{username}/ckan-compose/.env"), env_data)?;
+        cmd!(sh, "sudo ../ahoy down").run()?;
+        cmd!(sh, "sudo docker system prune -f").run()?;
+        cmd!(sh, "sudo ../ahoy up").run()?;
         cmd!(sh, "sudo ../ahoy up").run()?;
         println!("{}", success_text("✅ 5. Successfully ran ckan-compose."));
 
