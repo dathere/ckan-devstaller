@@ -262,10 +262,10 @@ fn main() -> Result<()> {
         println!("Existing users: {}", existing_users);
         //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user remove existing_users").run().ok();
         //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini search-index clear").run().ok();
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add sysadmin_username password=password email=sysadmin_username@localhost").run()?;
+        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add {sysadmin_username} password={sysadmin_password} email={sysadmin_email}").run()?;
         cmd!(
             sh,
-            "ckan -c /etc/ckan/default/ckan.ini sysadmin add sysadmin_username"
+            "ckan -c /etc/ckan/default/ckan.ini sysadmin add {sysadmin_username}"
         )
         .run()?;
         println!(
@@ -374,7 +374,8 @@ fn main() -> Result<()> {
             cmd!(sh, "sudo apt install unzip -y").run()?;
             cmd!(sh, "unzip qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
             cmd!(sh, "sudo rm -rf qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
-            cmd!(sh, "sudo mv ./qsvdp_glibc-2.31 /usr/local/bin/qsvdp").run()?;
+            //cmd!(sh, "sudo mv ./qsvdp_glibc-2.31 /usr/local/bin/qsvdp").run()?;
+            cmd!(sh, "sudo mv ./qsvdp /usr/local/bin/qsvdp").run()?;
             let mut conf = ini::Ini::load_from_file("/etc/ckan/default/ckan.ini")?;
             let app_main_section = conf.section_mut(Some("app:main")).unwrap();
             let mut ckan_plugins = app_main_section.get("ckan.plugins").unwrap().to_string();
