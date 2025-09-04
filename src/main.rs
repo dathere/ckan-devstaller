@@ -190,8 +190,8 @@ fn main() -> Result<()> {
 
         println!("\n{} Installing Ahoy...", step_text("4."),);
         sh.change_dir(format!("/home/{username}"));
-        cmd!(sh, "sudo curl -LO https://github.com/ahoy-cli/ahoy/releases/download/v2.5.0/ahoy-bin-linux-amd64").run()?;
-        cmd!(sh, "mv ./ahoy-bin-linux-amd64 ./ahoy").run()?;
+        cmd!(sh, "sudo curl -LO https://github.com/ahoy-cli/ahoy/releases/download/v2.5.0/ahoy-bin-linux-arm64").run()?;
+        cmd!(sh, "mv ./ahoy-bin-linux-arm64 ./ahoy").run()?;
         cmd!(sh, "sudo chmod +x ./ahoy").run()?;
         println!("{}", success_text("✅ 4. Successfully installed Ahoy."));
 
