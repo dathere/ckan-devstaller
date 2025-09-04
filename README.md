@@ -19,10 +19,18 @@
 > [!NOTE]  
 > The `/etc/ckan/default/ckan.ini` config file will have its comments removed for now. There are plans to fix this in a future release of `ckan-devstaller`.
 
-Paste this into your new Ubuntu 22.04 instance's terminal:
+You have two common options to choose from for installation. Paste one of the following scripts into your new Ubuntu 22.04 instance's terminal.
+
+### Install with non-interactive mode (default config)
 
 ```bash
-wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.1.0/install.bash | bash
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.2.0/install.bash | bash -s default
+```
+
+### Install with interactive mode
+
+```bash
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.2.0/install.bash | bash
 ```
 
 ## Demos
