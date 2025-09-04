@@ -259,8 +259,9 @@ fn main() -> Result<()> {
         let sysadmin_password = config.sysadmin.password;
         let sysadmin_email = config.sysadmin.email;
         let existing_users = cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user list").read()?;
+        println!("Existing users: {}", existing_users);
         cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini search-index clear").run().ok();
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add {username} password=password email={username}@localhost").run()?;
+        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add admin_user password=password email=admin_user@localhost").run()?;
         cmd!(
             sh,
             "ckan -c /etc/ckan/default/ckan.ini sysadmin add admin_user"
