@@ -269,6 +269,7 @@ fn main() -> Result<()> {
             success_text(format!("✅ 6. Installed CKAN {}.", config.ckan_version).as_str())
         );
         
+        
         if config.extension_datapusher_plus {
             println!(
                 "\n{} Enabling DataStore plugin, adding config URLs in /etc/ckan/default/ckan.ini and updating permissions...",
@@ -323,6 +324,7 @@ fn main() -> Result<()> {
                 )
             );
         }
+
 
 
             println!(
