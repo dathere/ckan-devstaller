@@ -194,7 +194,7 @@ fn main() -> Result<()> {
         cmd!(sh, "mv ./ahoy-bin-linux-arm64 ./ahoy").run()?;
         cmd!(sh, "sudo chmod +x ./ahoy").run()?;
         println!("{}", success_text("✅ 4. Successfully installed Ahoy."));
-
+        
         println!(
             "\n{} Downloading, installing, and starting ckan-compose...",
             step_text("5."),
@@ -203,10 +203,10 @@ fn main() -> Result<()> {
             cmd!(sh, "git clone --branch solr-9-impl https://github.com/a5dur/ckan-compose.git").run()?;
         }
         sh.change_dir(format!("/home/{username}/ckan-compose"));
-        cmd!(sh, "git switch ckan-devstaller").run()?;
+        // Remove this line: cmd!(sh, "git switch ckan-devstaller").run()?;
         let env_data = "PROJECT_NAME=ckan-devstaller-project
-DATASTORE_READONLY_PASSWORD=pass
-POSTGRES_PASSWORD=pass";
+        DATASTORE_READONLY_PASSWORD=pass
+        POSTGRES_PASSWORD=pass";
         std::fs::write(format!("/home/{username}/ckan-compose/.env"), env_data)?;
         cmd!(sh, "sudo ../ahoy up").run()?;
         println!("{}", success_text("✅ 5. Successfully ran ckan-compose."));
