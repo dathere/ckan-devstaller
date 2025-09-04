@@ -210,7 +210,8 @@ fn main() -> Result<()> {
         std::fs::write(format!("/home/{username}/ckan-compose/.env"), env_data)?;
         cmd!(sh, "sudo ../ahoy down").run()?;
         cmd!(sh, "sudo docker system prune -f").run()?;
-        cmd!(sh, "sudo ../ahoy up").run()?;
+        // Replace the `sudo ../ahoy up` line with:
+        cmd!(sh, "sudo docker container rm -f ckan-compose_mailcatcher_1").run().ok(); // ok() to ignore if it doesn't exist
         cmd!(sh, "sudo ../ahoy up").run()?;
         println!("{}", success_text("✅ 5. Successfully ran ckan-compose."));
 
