@@ -323,7 +323,7 @@ fn main() -> Result<()> {
                     "✅ 7. Enabled DataStore plugin, set DataStore URLs in /etc/ckan/default/ckan.ini, and updated permissions."
                 )
             );
-        }
+        
 
 
 
