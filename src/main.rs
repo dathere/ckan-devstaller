@@ -359,22 +359,21 @@ fn main() -> Result<()> {
             cmd!(sh, "sudo apt install python3-virtualenv python3-dev python3-pip python3-wheel build-essential libxslt1-dev libxml2-dev zlib1g-dev git libffi-dev libpq-dev uchardet -y").run()?;
             sh.change_dir("/usr/lib/ckan/default/src");
             // Install GDAL dependencies
-            cmd!(sh, "sudo apt update").run()?;
-            cmd!(sh, "sudo apt install -y gdal-bin libgdal-dev libproj-dev libgeos-dev python3-gdal").run()?;
+            //cmd!(sh, "sudo apt install -y gdal-bin libgdal-dev libproj-dev libgeos-dev python3-gdal").run()?;
             
             // Get GDAL version and export it
-            let gdal_version_output = cmd!(sh, "gdal-config --version").read()?;
-            let gdal_version = gdal_version_output.trim();
+            //let gdal_version_output = cmd!(sh, "gdal-config --version").read()?;
+            //let gdal_version = gdal_version_output.trim();
             
             // Install with explicit GDAL version
-            cmd!(sh, "GDAL_VERSION={gdal_version} pip install -e git+https://github.com/dathere/datapusher-plus.git@main#egg=datapusher-plus").run()?;
+            cmd!(sh, "pip install -e git+https://github.com/dathere/datapusher-plus.git@2.0.0#egg=datapusher-plus").run()?;
             sh.change_dir("/usr/lib/ckan/default/src/datapusher-plus");
             cmd!(sh, "pip install -r requirements.txt").run()?;
             sh.change_dir(format!("/home/{username}"));
-            cmd!(sh, "wget https://github.com/dathere/qsv/releases/download/4.0.0/qsv-4.0.0-x86_64-unknown-linux-gnu.zip").run()?;
+            cmd!(sh, "wget https://github.com/dathere/qsv/releases/download/4.0.0/qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
             cmd!(sh, "sudo apt install unzip -y").run()?;
-            cmd!(sh, "unzip qsv-4.0.0-x86_64-unknown-linux-gnu.zip").run()?;
-            cmd!(sh, "sudo rm -rf qsv-4.0.0-x86_64-unknown-linux-gnu.zip").run()?;
+            cmd!(sh, "unzip qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
+            cmd!(sh, "sudo rm -rf qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
             cmd!(sh, "sudo mv ./qsvdp_glibc-2.31 /usr/local/bin/qsvdp").run()?;
             let mut conf = ini::Ini::load_from_file("/etc/ckan/default/ckan.ini")?;
             let app_main_section = conf.section_mut(Some("app:main")).unwrap();
