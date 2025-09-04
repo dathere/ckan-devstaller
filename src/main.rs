@@ -234,6 +234,7 @@ fn main() -> Result<()> {
             )
             .as_str(),
         )?;
+        cmd!(sh, "sudo rm -rf /etc/ckan").run().ok(); // Remove whatever exists
         cmd!(sh, "sudo mkdir -p /etc/ckan/default").run()?;
         cmd!(sh, "sudo chown -R {username} /etc/ckan/").run()?;
         cmd!(
