@@ -258,6 +258,7 @@ fn main() -> Result<()> {
         let sysadmin_username = config.sysadmin.username;
         let sysadmin_password = config.sysadmin.password;
         let sysadmin_email = config.sysadmin.email;
+        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user remove {username}").run().ok(); // Try to remove the existing user (use .ok() so it doesn't fail if user doesn't exist)
         cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add {sysadmin_username} password={sysadmin_password} email={sysadmin_email}").run()?;
         cmd!(
             sh,
