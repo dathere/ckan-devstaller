@@ -19,6 +19,9 @@
 > [!NOTE]  
 > The `/etc/ckan/default/ckan.ini` config file will have its comments removed for now. There are plans to fix this in a future release of `ckan-devstaller`.
 
+> [!NOTE]  
+> Currently `ckan-devstaller` supports x86 architecture. ARM support is planned.
+
 You have two common options to choose from for installation. Paste one of the following scripts into your new Ubuntu 22.04 instance's terminal.
 
 ### Install with non-interactive mode (default config)
