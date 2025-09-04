@@ -357,6 +357,14 @@ fn main() -> Result<()> {
             // Install DataPusher+
             cmd!(sh, "sudo apt install python3-virtualenv python3-dev python3-pip python3-wheel build-essential libxslt1-dev libxml2-dev zlib1g-dev git libffi-dev libpq-dev uchardet -y").run()?;
             sh.change_dir("/usr/lib/ckan/default/src");
+            // Install GDAL and other geospatial dependencies
+            cmd!(sh, "sudo apt update").run()?;
+            cmd!(sh, "sudo apt install -y gdal-bin libgdal-dev libproj-dev libgeos-dev").run()?;
+
+            // Set GDAL environment variables for the build
+            let gdal_version = cmd!(sh, "gdal-config --version").read()?;
+            std::env::set_var("GDAL_VERSION", gdal_version.trim());
+
             cmd!(sh, "pip install -e git+https://github.com/dathere/datapusher-plus.git@main#egg=datapusher-plus").run()?;
             sh.change_dir("/usr/lib/ckan/default/src/datapusher-plus");
             cmd!(sh, "pip install -r requirements.txt").run()?;
