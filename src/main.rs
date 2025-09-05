@@ -441,12 +441,15 @@ ckanext.datapusher_plus.file_bin = /usr/bin/file
 ckanext.datapusher_plus.enable_druf = false
 ckanext.datapusher_plus.enable_form_redirect = true
 "#;
-            std::fs::write("dpp_default_config.ini", dpp_default_config)?;
+            
+            let dpp_config_path = format!("/home/{username}/dpp_default_config.ini");
+            std::fs::write(&dpp_config_path, dpp_default_config)?;
             cmd!(
                 sh,
-                "ckan config-tool /etc/ckan/default/ckan.ini -f dpp_default_config.ini"
+                "ckan config-tool /etc/ckan/default/ckan.ini -f {dpp_config_path}"
             )
             .run()?;
+            
             let resource_formats_str = std::fs::read_to_string(
                 "/usr/lib/ckan/default/src/ckan/config/resource_formats.json",
             )?;
