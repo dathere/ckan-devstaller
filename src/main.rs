@@ -262,10 +262,10 @@ fn main() -> Result<()> {
         println!("Existing users: {}", existing_users);
         //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user remove existing_users").run().ok();
         //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini search-index clear").run().ok();
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add {sysadmin_username} password={sysadmin_password} email={sysadmin_email}").run()?;
+        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add admin_ckan password=password email=admin@local").run()?;
         cmd!(
             sh,
-            "ckan -c /etc/ckan/default/ckan.ini sysadmin add {sysadmin_username}"
+            "ckan -c /etc/ckan/default/ckan.ini sysadmin add admin_ckan"
         )
         .run()?;
         println!(
