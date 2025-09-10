@@ -262,12 +262,12 @@ fn main() -> Result<()> {
         println!("Existing users: {}", existing_users);
         //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user remove existing_users").run().ok();
         //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini search-index clear").run().ok();
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add admin_ckan password=password email=admin@local").run()?;
-        cmd!(
-            sh,
-            "ckan -c /etc/ckan/default/ckan.ini sysadmin add admin_ckan"
-        )
-        .run()?;
+        //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add admin_ckan password=password email=admin@local").run()?;
+        //cmd!(
+        //    sh,
+        //    "ckan -c /etc/ckan/default/ckan.ini sysadmin add admin_ckan"
+        //)
+        //.run()?;
         println!(
             "{}",
             success_text(format!("✅ 6. Installed CKAN {}.", config.ckan_version).as_str())
@@ -372,7 +372,7 @@ fn main() -> Result<()> {
             sh.change_dir(format!("/home/{username}"));
             cmd!(sh, "wget https://github.com/dathere/qsv/releases/download/4.0.0/qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
             cmd!(sh, "sudo apt install unzip -y").run()?;
-            cmd!(sh, "unzip qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
+            cmd!(sh, "unzip -qo qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
             cmd!(sh, "sudo rm -rf qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
             //cmd!(sh, "sudo mv ./qsvdp_glibc-2.31 /usr/local/bin/qsvdp").run()?;
             cmd!(sh, "sudo mv ./qsvdp /usr/local/bin/qsvdp").run()?;
@@ -385,7 +385,7 @@ fn main() -> Result<()> {
             "ckan config-tool /etc/ckan/default/ckan.ini -s app:main ckan.plugins={ckan_plugins}"
         )
         .run()?;
-            cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.dataset_schemas=ckanext.datapusher_plus:dataset-druf.yaml").run()?;
+            // cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.dataset_schemas=ckanext.datapusher_plus:dataset-druf.yaml").run()?;
             // app_main_section.insert("ckan.plugins", ckan_plugins);
             // app_main_section.insert(
             //     "scheming.dataset_schemas",
