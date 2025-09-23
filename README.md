@@ -27,13 +27,13 @@ You have two common options to choose from for installation. Paste one of the fo
 ### Install with non-interactive mode (default config)
 
 ```bash
-wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.2.0/install.bash | bash -s default
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.2.1/install.bash | bash -s default
 ```
 
 ### Install with interactive mode
 
 ```bash
-wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.2.0/install.bash | bash
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.2.1/install.bash | bash
 ```
 
 ## Demos
