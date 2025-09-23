@@ -233,10 +233,10 @@ POSTGRES_PASSWORD=pass";
         cmd!(sh, "sudo chown -R {username} /etc/ckan/").run()?;
         cmd!(
             sh,
-            "git clone https://github.com/ckan/ckan.git /usr/lib/ckan/default/src"
+            "git clone https://github.com/ckan/ckan.git /usr/lib/ckan/default/src/ckan"
         )
         .run()?;
-        sh.change_dir("/usr/lib/ckan/default/src");
+        sh.change_dir("/usr/lib/ckan/default/src/ckan");
         cmd!(sh, "ckan generate config /etc/ckan/default/ckan.ini").run()?;
         cmd!(
             sh,
