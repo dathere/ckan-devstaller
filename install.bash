@@ -11,7 +11,7 @@ sudo apt install curl -y
 cd ~/
 
 # Download the ckan-devstaller binary file
-curl -LO https://github.com/dathere/ckan-devstaller/releases/download/0.2.0/ckan-devstaller
+curl -LO https://github.com/dathere/ckan-devstaller/releases/download/0.2.1/ckan-devstaller
 
 # Add execute permission to ckan-devstaller binary file
 sudo chmod +x ./ckan-devstaller
