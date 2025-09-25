@@ -55,7 +55,7 @@ fn main() -> Result<()> {
     let default_config_text = r#"
     The default configuration for ckan-devstaller does the following:
     - Install openssh-server to enable SSH access
-    - Install ckan-compose (https://github.com/tino097/ckan-compose) which sets up the CKAN backend (PostgreSQL, SOLR, Redis)
+    - Install ckan-compose (https://github.com/a5dur/ckan-compose) which sets up the CKAN backend (PostgreSQL, SOLR, Redis)
     - Install CKAN v2.11.3
     - Install the DataStore extension
     - Install the ckanext-scheming extension
@@ -190,24 +190,28 @@ fn main() -> Result<()> {
 
         println!("\n{} Installing Ahoy...", step_text("4."),);
         sh.change_dir(format!("/home/{username}"));
-        cmd!(sh, "sudo curl -LO https://github.com/ahoy-cli/ahoy/releases/download/v2.5.0/ahoy-bin-linux-amd64").run()?;
-        cmd!(sh, "mv ./ahoy-bin-linux-amd64 ./ahoy").run()?;
+        cmd!(sh, "sudo curl -LO https://github.com/ahoy-cli/ahoy/releases/download/v2.5.0/ahoy-bin-linux-arm64").run()?;
+        cmd!(sh, "mv ./ahoy-bin-linux-arm64 ./ahoy").run()?;
         cmd!(sh, "sudo chmod +x ./ahoy").run()?;
         println!("{}", success_text("✅ 4. Successfully installed Ahoy."));
-
+        
         println!(
             "\n{} Downloading, installing, and starting ckan-compose...",
             step_text("5."),
         );
         if !std::fs::exists(format!("/home/{username}/ckan-compose"))? {
-            cmd!(sh, "git clone https://github.com/tino097/ckan-compose.git").run()?;
+            cmd!(sh, "git clone --branch solr-9-impl https://github.com/a5dur/ckan-compose.git").run()?;
         }
         sh.change_dir(format!("/home/{username}/ckan-compose"));
-        cmd!(sh, "git switch ckan-devstaller").run()?;
+        // Remove this line: cmd!(sh, "git switch ckan-devstaller").run()?;
         let env_data = "PROJECT_NAME=ckan-devstaller-project
-DATASTORE_READONLY_PASSWORD=pass
-POSTGRES_PASSWORD=pass";
+        DATASTORE_READONLY_PASSWORD=pass
+        POSTGRES_PASSWORD=pass";
         std::fs::write(format!("/home/{username}/ckan-compose/.env"), env_data)?;
+        cmd!(sh, "sudo ../ahoy down").run()?;
+        cmd!(sh, "sudo docker system prune -f").run()?;
+        // Replace the `sudo ../ahoy up` line with:
+        cmd!(sh, "sudo docker container rm -f ckan-compose_mailcatcher_1").run().ok(); // ok() to ignore if it doesn't exist
         cmd!(sh, "sudo ../ahoy up").run()?;
         println!("{}", success_text("✅ 5. Successfully ran ckan-compose."));
 
@@ -217,6 +221,7 @@ POSTGRES_PASSWORD=pass";
             config.ckan_version
         );
         cmd!(sh, "sudo apt install python3-dev libpq-dev python3-pip python3-venv git-core redis-server -y").run()?;
+        cmd!(sh, "sudo rm -rf /usr/lib/ckan").run().ok(); // Remove whatever exists (ok() to ignore if nothing exists)
         cmd!(sh, "sudo mkdir -p /usr/lib/ckan/default").run()?;
         cmd!(sh, "sudo chown {username} /usr/lib/ckan/default").run()?;
         let venv_path = PathBuf::from_str("/usr/lib/ckan/default")?;
@@ -229,6 +234,7 @@ POSTGRES_PASSWORD=pass";
             )
             .as_str(),
         )?;
+        cmd!(sh, "sudo rm -rf /etc/ckan").run().ok(); // Remove whatever exists
         cmd!(sh, "sudo mkdir -p /etc/ckan/default").run()?;
         cmd!(sh, "sudo chown -R {username} /etc/ckan/").run()?;
         cmd!(
@@ -252,17 +258,22 @@ POSTGRES_PASSWORD=pass";
         let sysadmin_username = config.sysadmin.username;
         let sysadmin_password = config.sysadmin.password;
         let sysadmin_email = config.sysadmin.email;
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add {sysadmin_username} password={sysadmin_password} email={sysadmin_email}").run()?;
-        cmd!(
-            sh,
-            "ckan -c /etc/ckan/default/ckan.ini sysadmin add {sysadmin_username}"
-        )
-        .run()?;
+        let existing_users = cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user list").read()?;
+        println!("Existing users: {}", existing_users);
+        //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user remove existing_users").run().ok();
+        //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini search-index clear").run().ok();
+        //cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini user add admin_ckan password=password email=admin@local").run()?;
+        //cmd!(
+        //    sh,
+        //    "ckan -c /etc/ckan/default/ckan.ini sysadmin add admin_ckan"
+        //)
+        //.run()?;
         println!(
             "{}",
             success_text(format!("✅ 6. Installed CKAN {}.", config.ckan_version).as_str())
         );
-
+        
+        
         if config.extension_datapusher_plus {
             println!(
                 "\n{} Enabling DataStore plugin, adding config URLs in /etc/ckan/default/ckan.ini and updating permissions...",
@@ -293,17 +304,20 @@ POSTGRES_PASSWORD=pass";
                 "ckan -c /etc/ckan/default/ckan.ini datastore set-permissions"
             )
             .read()?;
-            std::fs::write("permissions.sql", set_permissions_output)?;
+            
+            // Use absolute path for permissions.sql file
+            let permissions_file = format!("/home/{username}/ckan-compose/permissions.sql");
+            std::fs::write(&permissions_file, set_permissions_output)?;
             loop {
                 std::thread::sleep(std::time::Duration::from_secs(2));
-                if std::fs::exists("permissions.sql")? {
+                if std::fs::exists(&permissions_file)? {
                     break;
                 }
             }
-            sh.change_dir(format!("/home/{username}"));
+            // Removed sh.change_dir line - no longer needed
             cmd!(
                 sh,
-                "sudo docker cp permissions.sql {postgres_container_id}:/permissions.sql"
+                "sudo docker cp {permissions_file} {postgres_container_id}:/permissions.sql"
             )
             .run()?;
             cmd!(sh, "sudo docker exec {postgres_container_id} psql -U ckan_default --set ON_ERROR_STOP=1 -f permissions.sql").run()?;
@@ -313,6 +327,9 @@ POSTGRES_PASSWORD=pass";
                     "✅ 7. Enabled DataStore plugin, set DataStore URLs in /etc/ckan/default/ckan.ini, and updated permissions."
                 )
             );
+        
+
+
 
             println!(
                 "{}",
@@ -341,15 +358,24 @@ POSTGRES_PASSWORD=pass";
             // Install DataPusher+
             cmd!(sh, "sudo apt install python3-virtualenv python3-dev python3-pip python3-wheel build-essential libxslt1-dev libxml2-dev zlib1g-dev git libffi-dev libpq-dev uchardet -y").run()?;
             sh.change_dir("/usr/lib/ckan/default/src");
-            cmd!(sh, "pip install -e git+https://github.com/dathere/datapusher-plus.git@main#egg=datapusher-plus").run()?;
+            // Install GDAL dependencies
+            //cmd!(sh, "sudo apt install -y gdal-bin libgdal-dev libproj-dev libgeos-dev python3-gdal").run()?;
+            
+            // Get GDAL version and export it
+            //let gdal_version_output = cmd!(sh, "gdal-config --version").read()?;
+            //let gdal_version = gdal_version_output.trim();
+            
+            // Install with explicit GDAL version
+            cmd!(sh, "pip install -e git+https://github.com/dathere/datapusher-plus.git@2.0.0#egg=datapusher-plus").run()?;
             sh.change_dir("/usr/lib/ckan/default/src/datapusher-plus");
             cmd!(sh, "pip install -r requirements.txt").run()?;
             sh.change_dir(format!("/home/{username}"));
-            cmd!(sh, "wget https://github.com/dathere/qsv/releases/download/4.0.0/qsv-4.0.0-x86_64-unknown-linux-gnu.zip").run()?;
+            cmd!(sh, "wget https://github.com/dathere/qsv/releases/download/4.0.0/qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
             cmd!(sh, "sudo apt install unzip -y").run()?;
-            cmd!(sh, "unzip qsv-4.0.0-x86_64-unknown-linux-gnu.zip").run()?;
-            cmd!(sh, "sudo rm -rf qsv-4.0.0-x86_64-unknown-linux-gnu.zip").run()?;
-            cmd!(sh, "sudo mv ./qsvdp_glibc-2.31 /usr/local/bin/qsvdp").run()?;
+            cmd!(sh, "unzip -qo qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
+            cmd!(sh, "sudo rm -rf qsv-4.0.0-aarch64-unknown-linux-gnu.zip").run()?;
+            //cmd!(sh, "sudo mv ./qsvdp_glibc-2.31 /usr/local/bin/qsvdp").run()?;
+            cmd!(sh, "sudo mv ./qsvdp /usr/local/bin/qsvdp").run()?;
             let mut conf = ini::Ini::load_from_file("/etc/ckan/default/ckan.ini")?;
             let app_main_section = conf.section_mut(Some("app:main")).unwrap();
             let mut ckan_plugins = app_main_section.get("ckan.plugins").unwrap().to_string();
@@ -359,7 +385,7 @@ POSTGRES_PASSWORD=pass";
             "ckan config-tool /etc/ckan/default/ckan.ini -s app:main ckan.plugins={ckan_plugins}"
         )
         .run()?;
-            cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.dataset_schemas=ckanext.datapusher_plus:dataset-druf.yaml").run()?;
+            // cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.dataset_schemas=ckanext.datapusher_plus:dataset-druf.yaml").run()?;
             // app_main_section.insert("ckan.plugins", ckan_plugins);
             // app_main_section.insert(
             //     "scheming.dataset_schemas",
@@ -415,12 +441,15 @@ ckanext.datapusher_plus.file_bin = /usr/bin/file
 ckanext.datapusher_plus.enable_druf = false
 ckanext.datapusher_plus.enable_form_redirect = true
 "#;
-            std::fs::write("dpp_default_config.ini", dpp_default_config)?;
+            
+            let dpp_config_path = format!("/home/{username}/dpp_default_config.ini");
+            std::fs::write(&dpp_config_path, dpp_default_config)?;
             cmd!(
                 sh,
-                "ckan config-tool /etc/ckan/default/ckan.ini -f dpp_default_config.ini"
+                "ckan config-tool /etc/ckan/default/ckan.ini -f {dpp_config_path}"
             )
             .run()?;
+            
             let resource_formats_str = std::fs::read_to_string(
                 "/usr/lib/ckan/default/src/ckan/config/resource_formats.json",
             )?;
