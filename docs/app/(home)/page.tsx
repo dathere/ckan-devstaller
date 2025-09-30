@@ -58,7 +58,7 @@ function Hero() {
             "repeating-linear-gradient(65deg, var(--color-purple-300), var(--color-purple-300) 12px, color-mix(in oklab, var(--color-blue-600) 30%, transparent) 20px, transparent 200px)",
         }}
       />
-      <h1 className="mb-8 text-4xl font-medium md:hidden">Build Your Docs</h1>
+      <h1 className="mb-8 text-4xl font-medium md:hidden">ckan-devstaller</h1>
       <h1 className="mb-8 max-w-[800px] text-4xl font-medium max-md:hidden">
         <span className="text-5xl">ckan-devstaller</span>
         <br />
