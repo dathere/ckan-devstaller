@@ -102,18 +102,7 @@ function Hero() {
   );
 }
 
-const previewButtonVariants = cva(
-  "w-22 h-9 text-sm font-medium transition-colors rounded-full",
-  {
-    variants: {
-      active: {
-        true: "text-fd-primary-foreground",
-        false: "text-fd-muted-foreground",
-      },
-    },
-  },
-);
-export function PreviewImages() {
+function PreviewImages() {
   const [active, setActive] = useState(0);
   const previews = [
     {
