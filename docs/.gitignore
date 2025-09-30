@@ -23,6 +23,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # others
+.env*
 .env*.local
+!.env.example
 .vercel
 next-env.d.ts
