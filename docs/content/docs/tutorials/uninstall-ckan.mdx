@@ -1,0 +1,16 @@
+---
+title: Uninstall CKAN
+description: How to uninstall CKAN after having installed with ckan-devstaller
+---
+
+You may want to uninstall CKAN and related files after having ran ckan-devstaller. This can be useful if you want to re-run ckan-devstaller with a different configuration or are developing ckan-devstaller.
+
+Run the following script to uninstall CKAN and files related to ckan-devstaller:
+
+```bash
+sudo rm -rf /usr/lib/ckan
+sudo rm -rf /etc/ckan
+cd ~/
+rm -rf qsv*
+rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions.sql
+```
