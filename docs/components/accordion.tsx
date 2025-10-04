@@ -118,7 +118,7 @@ function CopyButton({ id }: { id: string }) {
       aria-label="Copy Link"
       className={cn(
         buttonVariants({
-          color: 'ghost',
+          variant: 'ghost',
           className: 'text-fd-muted-foreground me-2',
         }),
       )}
