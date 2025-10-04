@@ -1,0 +1,76 @@
+---
+title: Installation architecture
+description: View a brief overview of what the installation from ckan-devstaller looks like
+---
+
+import { File, Folder, Files } from 'fumadocs-ui/components/files';
+
+## CKAN and extensions
+
+The CKAN repository selected from ckan-devstaller is installed to `/usr/lib/ckan/default/src/ckan`. Extensions are also installed as sibling folders. For example if `ckanext-scheming` is also installed:
+
+```files
+/usr/lib/ckan/default/src
+├── ckan
+│   ├── ...
+├── ckanext-scheming
+│   ├── ...
+```
+
+The configuration file for CKAN is installed at `/etc/ckan/default/ckan.ini`:
+
+```files
+/etc/ckan/default
+├── ckan.ini
+├── who.ini
+```
+
+## ckan-compose
+
+We install certain first-time install files and `ckan-compose` as a directory in the user's home (`~`) directory. For example for the user `adam`:
+
+```files
+/home/adam
+├── ahoy
+├── dpp_default_config.ini
+├── get-docker.sh
+├── permissions.sql
+├── ckan-compose
+│   ├── ...
+```
+
+After running ckan-devstaller you may also see many files starting with `qsv` and `README`. There are various files you can remove after running ckan-devstaller including:
+
+- `dpp_default_config.ini`
+- `get-docker.sh`
+- `permissions.sql`
+- `README`
+- The various `qsv` files
+
+Here's a script you can run for cleanup after running ckan-devstaller:
+
+```bash
+cd ~/
+rm -rf dpp_default_config.ini get-docker.sh permissions.sql README qsv*
+```
+
+## DataPusher+
+
+We install a compatible version of qsv with the DataPusher+ variant named `qsvdp` and move it to `/usr/local/bin`:
+
+```files
+/usr/local/bin
+├── qsvdp
+```
+
+The ckanext-scheming and DataPusher+ extensions are installed in the same location as other CKAN extensions:
+
+```files
+/usr/lib/ckan/default/src
+├── ckan
+|   ├── ...
+├── ckanext-scheming
+|   ├── ...
+├── datapusher_plus
+|   ├── ...
+```

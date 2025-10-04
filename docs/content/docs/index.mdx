@@ -3,4 +3,64 @@ title: Quick Start
 description: Getting Started with ckan-devstaller
 ---
 
-This site is a work in progress. You may [view the ckan-devstaller README and source code](https://github.com/dathere/ckan-devstaller) in the meantime.
+ckan-devstaller attempts to install a CKAN instance from source along with [ckan-compose](https://github.com/tino097/ckan-compose) and other optional features, intended for development use in a new Ubuntu 22.04 instance.
+
+<Callout title="Please run ckan-devstaller in a new Ubuntu 22.04 instance only" type="error">Make sure `ckan-devstaller` is run in a **new** Ubuntu 22.04 instanceof. Do NOT run `ckan-devstaller` in an existing instance that is important for your usage.</Callout>
+
+import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
+
+<Accordions type="single">
+  <Accordion title="Note for VirtualBox users">If you are using Ubuntu 22.04 on VirtualBox, you may need to add your user to the sudoers file before running the ckan-devstaller install script. Open a terminal in your virtual machine (VM), run `su -` and log in as the root user with the password you used to set up the VM, then type `sudo adduser <username> sudo` where `<username>` is your username then restart your VM and run the ckan-devstaller installer script.</Accordion>
+  <Accordion title="Note for ARM64 users">Currently `ckan-devstaller` supports `x86_64` architecture. `ARM64` support is planned.</Accordion>
+</Accordions>
+
+Currently you have two options to choose from for installation. Paste one of the following scripts into your new Ubuntu 22.04 instance's terminal:
+
+## (Option 1/2) Install with interactive mode
+
+```bash
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.2.1/install.bash | bash -s default
+```
+
+## (Option 2/2) Install with non-interactive mode with a specific config
+
+The following script will install the following:
+
+- CKAN 2.11.3
+- [ckan-compose](https://github.com/tino097/ckan-compose/tree/ckan-devstaller)
+- [DataStore extension](https://docs.ckan.org/en/2.11/maintaining/datastore.html)
+- [ckanext-scheming extension](https://github.com/ckan/ckanext-scheming)
+- [DataPusher+ extension](https://github.com/dathere/datapusher-plus)
+
+[DRUF mode](https://github.com/dathere/datapusher-plus?tab=readme-ov-file#druf-dataset-resource-upload-first-workflow) for DataPusher+ is available but disabled by default.
+
+```bash
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.2.1/install.bash | bash -s default
+```
+
+## Learn more
+
+import { BlocksIcon, GitMergeIcon, Trash2Icon } from 'lucide-react';
+
+<Cards>
+  <Card
+    icon={<GitMergeIcon />}
+    href="https://github.com/dathere/ckan-devstaller"
+    title="Source code">
+    View the source code of ckan-devstaller on GitHub
+  </Card>
+  <Card
+    icon={<BlocksIcon />}
+    href="/docs/reference/installation-architecture"
+    title="Installation architecture"
+  >
+    Learn about where files are installed after running ckan-devstaller
+  </Card>
+  <Card
+    icon={<Trash2Icon />}
+    href="/docs/tutorials/uninstall-ckan"
+    title="Uninstall CKAN"
+  >
+    Learn how to uninstall CKAN after running ckan-devstaller
+  </Card>
+</Cards>

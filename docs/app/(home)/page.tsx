@@ -2,7 +2,6 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
 "use client";
 
-import { cva } from "class-variance-authority";
 import { cn } from "fumadocs-ui/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
