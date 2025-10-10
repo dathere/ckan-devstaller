@@ -1,8 +1,15 @@
-/** biome-ignore-all lint/a11y/useButtonType: <explanation> */
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: Would need to look into this trivial issue */
 "use client";
 
+import defaultMdxComponents from "fumadocs-ui/mdx";
 import { cn } from "fumadocs-ui/utils/cn";
+import {
+  BlocksIcon,
+  GitMergeIcon,
+  HomeIcon,
+  SailboatIcon,
+  ZapIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -12,6 +19,7 @@ import CkanDevstallerDemo from "./ckan-devstaller-demo.gif";
 export default function HomePage() {
   const gridColor =
     "color-mix(in oklab, var(--color-fd-primary) 10%, transparent)";
+  const { Card, Cards } = defaultMdxComponents;
   return (
     <>
       <div
@@ -27,9 +35,36 @@ export default function HomePage() {
               "repeating-linear-gradient(to bottom, transparent, color-mix(in oklab, var(--color-fd-primary) 1%, transparent) 500px, transparent 1000px)",
           }}
         >
-          <div className="relative">
+          <div className="relative mb-4">
             <Hero />
           </div>
+          <Cards>
+            <Card
+              icon={<ZapIcon />}
+              href="/docs/quick-start"
+              title="Quick start"
+            >
+              Get started with ckan-devstaller and install CKAN within minutes
+            </Card>
+            <Card icon={<BlocksIcon />} href="/docs/builder" title="Builder">
+              Customize your installation with an interactive web GUI
+            </Card>
+            <Card
+              icon={<HomeIcon />}
+              href="/docs/reference/installation-architecture"
+              title="Installation architecture"
+            >
+              Learn about where files are installed after running
+              ckan-devstaller
+            </Card>
+            <Card
+              icon={<GitMergeIcon />}
+              href="https://github.com/dathere/ckan-devstaller"
+              title="Source code"
+            >
+              View the source code of ckan-devstaller on GitHub
+            </Card>
+          </Cards>
         </div>
       </main>
     </>
@@ -59,9 +94,12 @@ function Hero() {
       />
       <h1 className="mb-8 text-4xl font-medium md:hidden">ckan-devstaller</h1>
       <h1 className="mb-8 max-w-[800px] text-4xl font-medium max-md:hidden">
-        <span className="text-5xl">ckan-devstaller</span>
+        <span className="text-5xl">
+          ckan-devstaller{" "}
+          <SailboatIcon className="inline-block w-10 h-10 pb-1" />
+        </span>
         <br />
-        Launch CKAN dev instances within minutes
+        Launch CKAN dev instances within minutes.
       </h1>
       <p className="mb-2 text-fd-muted-foreground md:max-w-[80%] md:text-xl">
         ckan-devstaller is a command-line tool to automate installing CKAN for
@@ -81,7 +119,7 @@ function Hero() {
             buttonVariants({ size: "lg", className: "rounded-full" }),
           )}
         >
-          Getting Started
+          Get Started
         </Link>
         <Link
           href="https://github.com/dathere/ckan-devstaller"

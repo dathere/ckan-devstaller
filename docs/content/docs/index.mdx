@@ -1,11 +1,11 @@
 ---
 title: Quick Start
-description: Getting Started with ckan-devstaller
+description: Get started with ckan-devstaller and install CKAN within minutes.
 ---
 
 ckan-devstaller attempts to install a CKAN instance from source along with [ckan-compose](https://github.com/tino097/ckan-compose) and other optional features, intended for development use in a new Ubuntu 22.04 instance.
 
-<Callout title="Please run ckan-devstaller in a new Ubuntu 22.04 instance only" type="error">Make sure `ckan-devstaller` is run in a **new** Ubuntu 22.04 instanceof. Do NOT run `ckan-devstaller` in an existing instance that is important for your usage.</Callout>
+<Callout title="Please run ckan-devstaller in a new Ubuntu 22.04 instance only" type="error">Make sure `ckan-devstaller` is run in a **new** Ubuntu 22.04 instance. Do NOT run `ckan-devstaller` in an existing instance that is important for your usage.</Callout>
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
 
@@ -40,11 +40,18 @@ wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.2.1/ins
 
 ## Learn more
 
-import { BlocksIcon, GitMergeIcon, Trash2Icon } from 'lucide-react';
+import { BlocksIcon, HomeIcon, GitMergeIcon, Trash2Icon } from 'lucide-react';
 
 <Cards>
   <Card
     icon={<BlocksIcon />}
+    href="/docs/builder"
+    title="Builder"
+  >
+    Customize your installation with an interactive web GUI
+  </Card>
+  <Card
+    icon={<HomeIcon />}
     href="/docs/reference/installation-architecture"
     title="Installation architecture"
   >
