@@ -1,15 +1,8 @@
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import {
-  DocsBody,
-  DocsDescription,
-  DocsPage,
-  DocsTitle,
-} from "fumadocs-ui/page";
-import {
   BarChartBigIcon,
   BlocksIcon,
-  HomeIcon,
   SailboatIcon,
   TerminalSquareIcon,
 } from "lucide-react";
