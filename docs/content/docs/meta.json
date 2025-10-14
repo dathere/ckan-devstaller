@@ -1,3 +1,10 @@
 {
-    "pages": ["---Introduction---", "index", "what-is-ckan-devstaller", "builder", "---Further reading---", "tutorials", "reference"]
+    "pages": [
+        "---Introduction---",
+        "index",
+        "builder",
+        "---Further reading---",
+        "tutorials",
+        "reference"
+    ]
 }

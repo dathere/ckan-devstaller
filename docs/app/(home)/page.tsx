@@ -38,33 +38,6 @@ export default function HomePage() {
           <div className="relative mb-4">
             <Hero />
           </div>
-          <Cards>
-            <Card
-              icon={<ZapIcon />}
-              href="/docs/quick-start"
-              title="Quick start"
-            >
-              Get started with ckan-devstaller and install CKAN within minutes
-            </Card>
-            <Card icon={<BlocksIcon />} href="/docs/builder" title="Builder">
-              Customize your installation with an interactive web GUI
-            </Card>
-            <Card
-              icon={<HomeIcon />}
-              href="/docs/reference/installation-architecture"
-              title="Installation architecture"
-            >
-              Learn about where files are installed after running
-              ckan-devstaller
-            </Card>
-            <Card
-              icon={<GitMergeIcon />}
-              href="https://github.com/dathere/ckan-devstaller"
-              title="Source code"
-            >
-              View the source code of ckan-devstaller on GitHub
-            </Card>
-          </Cards>
         </div>
       </main>
     </>
@@ -72,6 +45,7 @@ export default function HomePage() {
 }
 
 function Hero() {
+  const { Card, Cards } = defaultMdxComponents;
   return (
     <div className="relative z-2 flex flex-col border-x border-t bg-fd-background/80 px-4 pt-12 max-md:text-center md:px-12 md:pt-16 [.uwu_&]:hidden overflow-hidden">
       <div
@@ -112,7 +86,7 @@ function Hero() {
         </Link>
         .
       </p>
-      <div className="inline-flex items-center gap-3 max-md:mx-auto">
+      <div className="inline-flex items-center gap-3 max-md:mx-auto mb-8">
         <Link
           href="/docs"
           className={cn(
@@ -134,6 +108,33 @@ function Hero() {
           Source Code
         </Link>
       </div>
+        <Cards>
+          <Card
+            icon={<ZapIcon />}
+            href="/docs/quick-start"
+            title="Quick start"
+          >
+            Get started with ckan-devstaller and install CKAN within minutes
+          </Card>
+          <Card icon={<BlocksIcon />} href="/docs/builder" title="Builder">
+            Customize your installation with an interactive web GUI
+          </Card>
+          <Card
+            icon={<HomeIcon />}
+            href="/docs/reference/installation-architecture"
+            title="Installation architecture"
+          >
+            Learn about where files are installed after running
+            ckan-devstaller
+          </Card>
+          <Card
+            icon={<GitMergeIcon />}
+            href="https://github.com/dathere/ckan-devstaller"
+            title="Source code"
+          >
+            View the source code of ckan-devstaller on GitHub
+          </Card>
+        </Cards>
       <PreviewImages />
     </div>
   );
@@ -149,7 +150,7 @@ function PreviewImages() {
   ];
 
   return (
-    <div className="mt-12 p-8 min-w-[800px] overflow-hidden xl:-mx-12 dark:[mask-image:linear-gradient(to_top,transparent,white_40px)]">
+    <div className="p-8 min-w-[800px] overflow-hidden xl:-mx-12 dark:[mask-image:linear-gradient(to_top,transparent,white_40px)]">
       <div className="absolute flex flex-row left-1/2 -translate-1/2 bottom-4 z-2 p-1 rounded-full bg-fd-card border shadow-xl dark:shadow-fd-background">
         {/* <div
           role="none"
