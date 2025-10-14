@@ -11,7 +11,7 @@ use crate::{
     styles::{important_text, step_text, success_text},
 };
 use anyhow::Result;
-use clap::Parser;
+use clap::{Parser, Subcommand};
 use human_panic::{metadata, setup_panic};
 use inquire::Confirm;
 use serde_json::json;
@@ -20,27 +20,29 @@ use xshell::cmd;
 use xshell_venv::{Shell, VirtualEnv};
 
 /// CLI to help install a CKAN instance for development within minutes. Learn more at: https://ckan-devstaller.dathere.com
-#[derive(Parser, Debug)]
+#[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Args {
-    /// Skip interactive steps and install CKAN with datHere's default config
+    /// Skip interactive steps and install the CKAN-only preset
     #[arg(short, long)]
     default: bool,
-    /// Preset configuration.
-    #[arg(short, long)]
-    preset: Option<String>,
     #[arg(short, long)]
     /// CKAN version to install defined by semantic versioning from official releases from https://github.com/ckan/ckan, or a custom git repository.
     ckan_version: Option<String>,
     /// List of CKAN extensions to install, separated by either commas or spaces.
-    #[arg(short, long)]
+    #[arg(short, long, value_parser, num_args = 1.., value_delimiter = ' ')]
     extensions: Option<Vec<String>>,
     /// List of custom features, separated by either commas or spaces.
-    #[arg(short, long)]
+    #[arg(short, long, value_parser, num_args = 1.., value_delimiter = ' ')]
     features: Option<Vec<String>>,
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
+
+#[derive(Subcommand)]
+enum Commands {
     /// Attempt to uninstall CKAN and related ckan-devstaller installation files
-    #[arg(short, long)]
-    uninstall: bool,
+    Uninstall {},
 }
 
 #[derive(Clone)]
@@ -68,8 +70,9 @@ fn main() -> Result<()> {
     // Set up default config
     let args = Args::parse();
     let sh = Shell::new()?;
+    let username = cmd!(sh, "whoami").read()?;
 
-    if args.uninstall {
+    if matches!(&args.command, Some(Commands::Uninstall {})) {
         let uninstall_confirmation = Confirm::new(
             "Are you sure you want to uninstall CKAN and related files from ckan-devstaller?",
         )
@@ -85,7 +88,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         if uninstall_confirmation {
             cmd!(sh, "sudo rm -rf /usr/lib/ckan").run()?;
             cmd!(sh, "sudo rm -rf /etc/ckan").run()?;
-            sh.change_dir("~/");
+            sh.change_dir(format!("/home/{username}"));
             cmd!(sh, "rm -rf qsv*").run()?;
             cmd!(sh, "rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions.sql").run()?;
         } else {
@@ -94,7 +97,6 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         return Ok(());
     }
 
-    let username = cmd!(sh, "whoami").read()?;
     let default_sysadmin = Sysadmin {
         username: username.clone(),
         password: "password".to_string(),
@@ -141,8 +143,8 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
     }
     if config.extension_datapusher_plus {
         default_config_text.push_str("\n- Install the DataPusher+ extension");
+        default_config_text.push_str("\n- Disable DRUF mode for DataPusher+");
     }
-    default_config_text.push_str("\n- Disable DRUF mode for DataPusher+");
     println!("{default_config_text}");
     let answer_customize = if args.default {
         false
@@ -191,7 +193,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
     };
 
     if begin_installation {
-        println!("{}", important_text("Starting installation..."));
+        println!("\n{}", important_text("Starting installation..."));
         // Run sudo apt update and sudo apt upgrade
         step_package_updates("1.".to_string(), &sh)?;
 
@@ -258,7 +260,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         .run()?;
         println!(
             "{}",
-            success_text(format!("✅ 6. Installed CKAN {}.", config.ckan_version).as_str())
+            success_text(format!("6. Installed CKAN {}.", config.ckan_version).as_str())
         );
 
         if config.extension_datapusher_plus {
@@ -308,7 +310,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
             println!(
                 "{}",
                 success_text(
-                    "✅ 7. Enabled DataStore plugin, set DataStore URLs in /etc/ckan/default/ckan.ini, and updated permissions."
+                    "7. Enabled DataStore plugin, set DataStore URLs in /etc/ckan/default/ckan.ini, and updated permissions."
                 )
             );
 
@@ -456,12 +458,14 @@ ckanext.datapusher_plus.enable_form_redirect = true
             .run()?;
             println!(
                 "{}",
-                success_text("✅ 8. Installed ckanext-scheming and DataPusher+ extensions.")
+                success_text("8. Installed ckanext-scheming and DataPusher+ extensions.")
             );
         }
 
-        println!("\n{}", success_text("✅ Running CKAN instance..."));
+        println!("\n{}", success_text("Running CKAN instance..."));
         cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini run").run()?;
+    } else {
+        println!("Cancelling installation.");
     }
 
     Ok(())

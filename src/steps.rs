@@ -13,7 +13,10 @@ pub fn step_intro() {
         highlighted_text("CKAN 2.11.3")
     );
     println!(
-        "{}",
+        "\nYou may also learn more about ckan-devstaller at https://ckan-devstaller.dathere.com."
+    );
+    println!(
+        "\n{}\n",
         important_text(
             "This installer is only intended for a brand new installation of Ubuntu 22.04."
         )
