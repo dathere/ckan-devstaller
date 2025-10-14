@@ -1,5 +1,8 @@
 # ckan-devstaller
 
+<a href="https://ckan-devstaller.dathere.com"><img width="1165" height="668" alt="{1329F0BA-A29F-4BF8-BB6B-E3BA84FDAFCC}" src="https://github.com/user-attachments/assets/8f0cc4ef-d90d-4715-ba21-9083dff0c3ff" /></a>
+
+
 `ckan-devstaller` attempts to install a CKAN instance using [ckan-compose](https://github.com/tino097/ckan-compose) for development usage in a new Ubuntu 22.04 instance.
 
 You may find `ckan-devstaller` useful for:
