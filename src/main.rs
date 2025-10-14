@@ -4,7 +4,11 @@ mod styles;
 
 use crate::{
     questions::{question_ckan_version, question_ssh, question_sysadmin},
-    styles::{highlighted_text, important_text, step_text, success_text},
+    steps::{
+        step_install_ahoy, step_install_and_run_ckan_compose, step_install_curl,
+        step_install_docker, step_install_openssh, step_package_updates,
+    },
+    styles::{important_text, step_text, success_text},
 };
 use anyhow::Result;
 use clap::Parser;
@@ -15,15 +19,28 @@ use std::{path::PathBuf, str::FromStr};
 use xshell::cmd;
 use xshell_venv::{Shell, VirtualEnv};
 
-/// ckan-devstaller CLI
+/// CLI to help install a CKAN instance for development within minutes. Learn more at: https://ckan-devstaller.dathere.com
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    /// Skip interactive steps and install CKAN with default features
+    /// Skip interactive steps and install CKAN with datHere's default config
     #[arg(short, long)]
     default: bool,
+    /// Preset configuration.
+    #[arg(short, long)]
+    preset: Option<String>,
+    #[arg(short, long)]
+    /// CKAN version to install defined by semantic versioning from official releases from https://github.com/ckan/ckan, or a custom git repository.
+    ckan_version: Option<String>,
+    /// List of CKAN extensions to install, separated by either commas or spaces.
+    #[arg(short, long)]
+    extensions: Option<Vec<String>>,
+    /// List of custom features, separated by either commas or spaces.
+    #[arg(short, long)]
+    features: Option<Vec<String>>,
 }
 
+#[derive(Clone)]
 struct Sysadmin {
     username: String,
     password: String,
@@ -45,36 +62,51 @@ fn main() -> Result<()> {
         .homepage("https://dathere.com")
         .support("- Create a support ticket at https://support.dathere.com or report an issue at https://github.com/dathere/ckan-devstaller"));
 
-    let args = Args::parse();
-
     // Set up default config
+    let args = Args::parse();
     let sh = Shell::new()?;
     let username = cmd!(sh, "whoami").read()?;
+    let default_sysadmin = Sysadmin {
+        username: username.clone(),
+        password: "password".to_string(),
+        email: format!("{username}@localhost"),
+    };
+    let config = Config {
+        ssh: args.features.is_some_and(|features| features.contains(&"enable-ssh".to_string())),
+        ckan_version: if args.ckan_version.is_some() { args.ckan_version.unwrap() } else { "2.11.3".to_string() },
+        sysadmin: default_sysadmin.clone(),
+        extension_datastore: args.extensions.clone().is_some_and(|extensions| extensions.contains(&"DataStore".to_string())),
+        extension_ckanext_scheming: args.extensions.clone().is_some_and(|extensions| extensions.contains(&"ckanext-scheming".to_string())),
+        extension_datapusher_plus: args.extensions.is_some_and(|extensions| extensions.contains(&"DataPusher+".to_string())),
+        druf_mode: false,
+    };
+
     steps::step_intro();
 
-    let default_config_text = r#"
-    The default configuration for ckan-devstaller does the following:
-    - Install openssh-server to enable SSH access
-    - Install ckan-compose (https://github.com/tino097/ckan-compose) which sets up the CKAN backend (PostgreSQL, SOLR, Redis)
-    - Install CKAN v2.11.3
-    - Install the DataStore extension
-    - Install the ckanext-scheming extension
-    - Install the DataPusher+ extension
-    - Disable DRUF mode for DataPusher+
-"#;
+    let mut default_config_text = String::from("The current configuration for ckan-devstaller does the following:");
+    if config.ssh {
+        default_config_text.push_str("\n- Install openssh-server to enable SSH access");
+    }
+    default_config_text.push_str("\n- Install ckan-compose (https://github.com/tino097/ckan-compose) which sets up the CKAN backend (PostgreSQL, SOLR, Redis)");
+    default_config_text.push_str(format!("\n- Install CKAN v{}", config.ckan_version).as_str());
+    if config.extension_datastore {
+        default_config_text.push_str("\n- Install the DataStore extension");
+    }
+    if config.extension_ckanext_scheming {
+        default_config_text.push_str("\n- Install the ckanext-scheming extension");
+    }
+    if config.extension_datapusher_plus {
+        default_config_text.push_str("\n- Install the DataPusher+ extension");
+    }
+    default_config_text.push_str("\n- Disable DRUF mode for DataPusher+");
     println!("{default_config_text}");
     let answer_customize = if args.default {
         false
     } else {
         Confirm::new(
-            "Would you like to customize any of these features for your CKAN installation?",
+            "Would you like to customize the configuration for your CKAN installation?",
         )
         .prompt()?
-    };
-    let default_sysadmin = Sysadmin {
-        username: username.clone(),
-        password: "password".to_string(),
-        email: format!("{username}@localhost"),
     };
     let config = if answer_customize {
         let answer_ssh = question_ssh()?;
@@ -107,15 +139,7 @@ fn main() -> Result<()> {
             druf_mode: answer_druf_mode,
         }
     } else {
-        Config {
-            ssh: true,
-            ckan_version: "2.11.3".to_string(),
-            sysadmin: default_sysadmin,
-            extension_datastore: true,
-            extension_ckanext_scheming: true,
-            extension_datapusher_plus: true,
-            druf_mode: false,
-        }
+        config
     };
 
     let begin_installation = if args.default {
@@ -126,90 +150,22 @@ fn main() -> Result<()> {
 
     if begin_installation {
         println!("{}", important_text("Starting installation..."));
-        println!(
-            "\n{} Running {} and {}...",
-            step_text("1."),
-            highlighted_text("sudo apt update -y"),
-            highlighted_text("sudo apt upgrade -y")
-        );
-        println!(
-            "{}",
-            important_text("You may need to provide your sudo password.")
-        );
-        cmd!(sh, "sudo apt update -y").run()?;
-        // Ignoring xrdp error with .ignore_status() for now
-        cmd!(sh, "sudo apt upgrade -y").ignore_status().run()?;
-        println!(
-            "{}",
-            success_text("✅ 1. Successfully ran update and upgrade commands.")
-        );
+        // Run sudo apt update and sudo apt upgrade
+        step_package_updates("1.".to_string(), &sh)?;
 
-        println!(
-            "\n{} Installing {}...",
-            step_text("2."),
-            highlighted_text("curl")
-        );
-        cmd!(sh, "sudo apt install curl -y").run()?;
-        println!("{}", success_text("✅ 2.1. Successfully installed curl."));
+        // Install curl
+        step_install_curl("2.".to_string(), &sh)?;
+        // If user wants SSH capability, install openssh-server
         if config.ssh {
-            println!("\n{} Installing openssh-server...", step_text("2."));
-            cmd!(sh, "sudo apt install openssh-server -y").run()?;
-        }
-        println!(
-            "{}",
-            success_text("✅ 2.2. Successfully installed openssh-server.")
-        );
-
-        let dpkg_l_output = cmd!(sh, "dpkg -l").read()?;
-        let has_docker = cmd!(sh, "grep docker")
-            .stdin(dpkg_l_output.clone())
-            .ignore_status()
-            .output()?
-            .status
-            .success();
-        if !has_docker {
-            println!("{} Installing Docker...", step_text("3."),);
-            cmd!(
-                sh,
-                "curl -fsSL https://get.docker.com -o /home/{username}/get-docker.sh"
-            )
-            .run()?;
-            cmd!(sh, "sudo sh /home/{username}/get-docker.sh").run()?;
-            println!("{}", success_text("✅ 3. Successfully installed Docker."));
+            step_install_openssh("2.".to_string(), &sh)?;
         }
 
-        let has_docker_compose = cmd!(sh, "grep docker-compose")
-            .stdin(dpkg_l_output)
-            .ignore_status()
-            .output()?
-            .status
-            .success();
-        if !has_docker_compose {
-            cmd!(sh, "sudo apt install docker-compose -y").run()?;
-        }
+        // Install docker CLI if user does not have it installed
+        step_install_docker("3.".to_string(), &sh, username.clone())?;
 
-        println!("\n{} Installing Ahoy...", step_text("4."),);
-        sh.change_dir(format!("/home/{username}"));
-        cmd!(sh, "sudo curl -LO https://github.com/ahoy-cli/ahoy/releases/download/v2.5.0/ahoy-bin-linux-amd64").run()?;
-        cmd!(sh, "mv ./ahoy-bin-linux-amd64 ./ahoy").run()?;
-        cmd!(sh, "sudo chmod +x ./ahoy").run()?;
-        println!("{}", success_text("✅ 4. Successfully installed Ahoy."));
+        step_install_ahoy("4.".to_string(), &sh, username.clone())?;
 
-        println!(
-            "\n{} Downloading, installing, and starting ckan-compose...",
-            step_text("5."),
-        );
-        if !std::fs::exists(format!("/home/{username}/ckan-compose"))? {
-            cmd!(sh, "git clone https://github.com/tino097/ckan-compose.git").run()?;
-        }
-        sh.change_dir(format!("/home/{username}/ckan-compose"));
-        cmd!(sh, "git switch ckan-devstaller").run()?;
-        let env_data = "PROJECT_NAME=ckan-devstaller-project
-DATASTORE_READONLY_PASSWORD=pass
-POSTGRES_PASSWORD=pass";
-        std::fs::write(format!("/home/{username}/ckan-compose/.env"), env_data)?;
-        cmd!(sh, "sudo ../ahoy up").run()?;
-        println!("{}", success_text("✅ 5. Successfully ran ckan-compose."));
+        step_install_and_run_ckan_compose("5.".to_string(), &sh, username.clone())?;
 
         println!(
             "\n{} Installing CKAN {}...",
