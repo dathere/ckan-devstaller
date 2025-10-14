@@ -38,6 +38,9 @@ struct Args {
     /// List of custom features, separated by either commas or spaces.
     #[arg(short, long)]
     features: Option<Vec<String>>,
+    /// Attempt to uninstall CKAN and related ckan-devstaller installation files
+    #[arg(short, long)]
+    uninstall: bool,
 }
 
 #[derive(Clone)]
@@ -65,6 +68,32 @@ fn main() -> Result<()> {
     // Set up default config
     let args = Args::parse();
     let sh = Shell::new()?;
+
+    if args.uninstall {
+        let uninstall_confirmation = Confirm::new(
+            "Are you sure you want to uninstall CKAN and related files from ckan-devstaller?",
+        )
+        .with_help_message(
+            r#"The following commands are ran when attempting the uninstall:
+sudo rm -rf /usr/lib/ckan
+sudo rm -rf /etc/ckan
+cd ~/
+rm -rf qsv*
+rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions.sql"#,
+        )
+        .prompt()?;
+        if uninstall_confirmation {
+            cmd!(sh, "sudo rm -rf /usr/lib/ckan").run()?;
+            cmd!(sh, "sudo rm -rf /etc/ckan").run()?;
+            sh.change_dir("~/");
+            cmd!(sh, "rm -rf qsv*").run()?;
+            cmd!(sh, "rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions.sql").run()?;
+        } else {
+            println!("Cancelling command.");
+        }
+        return Ok(());
+    }
+
     let username = cmd!(sh, "whoami").read()?;
     let default_sysadmin = Sysadmin {
         username: username.clone(),
@@ -72,18 +101,33 @@ fn main() -> Result<()> {
         email: format!("{username}@localhost"),
     };
     let config = Config {
-        ssh: args.features.is_some_and(|features| features.contains(&"enable-ssh".to_string())),
-        ckan_version: if args.ckan_version.is_some() { args.ckan_version.unwrap() } else { "2.11.3".to_string() },
+        ssh: args
+            .features
+            .is_some_and(|features| features.contains(&"enable-ssh".to_string())),
+        ckan_version: if args.ckan_version.is_some() {
+            args.ckan_version.unwrap()
+        } else {
+            "2.11.3".to_string()
+        },
         sysadmin: default_sysadmin.clone(),
-        extension_datastore: args.extensions.clone().is_some_and(|extensions| extensions.contains(&"DataStore".to_string())),
-        extension_ckanext_scheming: args.extensions.clone().is_some_and(|extensions| extensions.contains(&"ckanext-scheming".to_string())),
-        extension_datapusher_plus: args.extensions.is_some_and(|extensions| extensions.contains(&"DataPusher+".to_string())),
+        extension_datastore: args
+            .extensions
+            .clone()
+            .is_some_and(|extensions| extensions.contains(&"DataStore".to_string())),
+        extension_ckanext_scheming: args
+            .extensions
+            .clone()
+            .is_some_and(|extensions| extensions.contains(&"ckanext-scheming".to_string())),
+        extension_datapusher_plus: args
+            .extensions
+            .is_some_and(|extensions| extensions.contains(&"DataPusher+".to_string())),
         druf_mode: false,
     };
 
     steps::step_intro();
 
-    let mut default_config_text = String::from("The current configuration for ckan-devstaller does the following:");
+    let mut default_config_text =
+        String::from("The current configuration for ckan-devstaller does the following:");
     if config.ssh {
         default_config_text.push_str("\n- Install openssh-server to enable SSH access");
     }
@@ -103,10 +147,8 @@ fn main() -> Result<()> {
     let answer_customize = if args.default {
         false
     } else {
-        Confirm::new(
-            "Would you like to customize the configuration for your CKAN installation?",
-        )
-        .prompt()?
+        Confirm::new("Would you like to customize the configuration for your CKAN installation?")
+            .prompt()?
     };
     let config = if answer_customize {
         let answer_ssh = question_ssh()?;
