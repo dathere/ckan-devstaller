@@ -36,17 +36,6 @@ export default function Builder() {
 
   // Update command string when user changes configuration
   useEffect(() => {
-    let presetString = "";
-    if (config.extensions.length === 0 && config.features.length === 0)
-      presetString = ` \\\n--preset ckan-only`;
-    else if (
-      config.ckanVersion === "2.11.3" &&
-      config.extensions.includes("DataPusher+") &&
-      config.extensions.includes("ckanext-scheming") &&
-      config.extensions.includes("DataStore") &&
-      config.features.includes("enable-ssh")
-    )
-      presetString = ` \\\n--preset dathere-default`;
     const ckanVersionString = `--ckan-version ${config.ckanVersion}`;
     const extensionsString =
       config.extensions.length > 0
@@ -57,7 +46,7 @@ export default function Builder() {
         ? ` \\\n--features ${config.features.join(" ")}`
         : undefined;
     setCommand(
-      `./ckan-devstaller${presetString} \\
+      `./ckan-devstaller \\
 ${ckanVersionString}${extensionsString ? extensionsString : ""}${featuresString ? featuresString : ""}`,
     );
   }, [config]);
