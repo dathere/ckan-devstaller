@@ -29,10 +29,10 @@ struct Args {
     #[arg(short, long)]
     /// CKAN version to install defined by semantic versioning from official releases from https://github.com/ckan/ckan
     ckan_version: Option<String>,
-    /// List of CKAN extensions to install, separated by either commas or spaces
+    /// List of CKAN extensions to install, separated by spaces
     #[arg(short, long, value_parser, num_args = 1.., value_delimiter = ' ')]
     extensions: Option<Vec<String>>,
-    /// List of custom features, separated by either commas or spaces
+    /// List of custom features, separated by spaces
     #[arg(short, long, value_parser, num_args = 1.., value_delimiter = ' ')]
     features: Option<Vec<String>>,
     #[command(subcommand)]
