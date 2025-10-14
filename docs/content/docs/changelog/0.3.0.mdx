@@ -1,0 +1,37 @@
+---
+title: Changelog for ckan-devstaller v0.3.0 (2025-10-14)
+---
+
+Since v0.2.1 of ckan-devstaller, there have been many new features and changes now available in v0.3.0.
+
+## New web app: ckan-devstaller.dathere.com
+
+We've released a new web app [ckan-devstaller.dathere.com](https://ckan-devstaller.dathere.com) as the primary documentation site for ckan-devstaller.
+
+## Builder page
+
+There is now an interactive web GUI, the [Builder](/docs/builder), for users to customize their CKAN installation before copying the (now updated) ckan-devstaller command and running it on their terminal. This helps resolve issue [#6](https://github.com/dathere/ckan-devstaller/issues/11).
+
+## Updated Quick Start page
+
+The [Quick Start](/docs/quick-start) page now includes three options for suggested installation methods:
+
+1. Use the interactive [Builder](/docs/builder).
+2. Install the "CKAN-only" preset with a script which installs the latest stable version of CKAN and ckan-compose (with optional non-interactive script).
+3. Install the "datHere default" preset with a script which installs the latest stable version of CKAN and ckan-compose (with optional non-interactive script) along with the DataStore, ckanext-scheming, and DataPusher+ extensions and also installs the `openssh-server` package.
+
+## Installation architecture page
+
+There is now an [Installation Architecture](/docs/reference/installation-architecture) page in the Reference section of the web app that provides a visual representaion of where `ckan-devstaller` installs relevant files/folders.
+
+## Uninstall CKAN page
+
+There is now an [Uninstall CKAN](/docs/tutorials/uninstall-ckan) page in the Tutorials section of the web app that helps users understand how to uninstall their newly installed CKAN installation. This includes the option to either use the new `ckan-devstaller uninstall` subcommand or run the script directly.
+
+## README update
+
+The README on the [ckan-devstaller GitHub repository](https://github.com/dathere/ckan-devstaller) has been updated to have a more user-friendly focus for users and developers that may be new to CKAN thanks to the suggestions by [@drw](https://github.com/drw) in issues [#10](https://github.com/dathere/ckan-devstaller/issues/10) and [#11](https://github.com/dathere/ckan-devstaller/issues/11).
+
+## Changelog section
+
+We've added a Changelog section to the web app to denote new changes to `ckan-devstaller` for each release.
