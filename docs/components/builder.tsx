@@ -8,22 +8,59 @@ import {
   SailboatIcon,
   TerminalSquareIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PresetsBuilderSection from "./builder-sections/presets";
+import CKANVersionBuilderSection from "./builder-sections/ckan-version";
+import CKANExtensionsBuilderSection from "./builder-sections/ckan-extensions";
+import FeaturesBuilderSection from "./builder-sections/features";
 
-type Config = {
+export type Config = {
   preset: string | undefined;
   ckanVersion: string;
   extensions: string[];
+  features: string[];
 };
+
+export const selectedCardClasses =
+  "bg-blue-100 dark:bg-blue-950 border-blue-300 dark:border-blue-900 border-2";
 
 export default function Builder() {
   const { Card, Cards } = defaultMdxComponents;
   const [command, setCommand] = useState("./ckan-devstaller");
   const [config, setConfig] = useState<Config>({
-    preset: undefined,
+    preset: "ckan-only",
     ckanVersion: "2.11.3",
     extensions: [],
+    features: [],
   });
+
+  // Update command string when user changes configuration
+  useEffect(() => {
+    let presetString = "";
+    if (config.extensions.length === 0 && config.features.length === 0)
+      presetString = ` \\\n--preset ckan-only`;
+    else if (
+      config.ckanVersion === "2.11.3" &&
+      config.extensions.includes("DataPusher+") &&
+      config.extensions.includes("ckanext-scheming") &&
+      config.extensions.includes("DataStore") &&
+      config.features.includes("enable-ssh")
+    )
+      presetString = ` \\\n--preset dathere-default`;
+    const ckanVersionString = `--ckan-version ${config.ckanVersion}`;
+    const extensionsString =
+      config.extensions.length > 0
+        ? ` \\\n--extensions ${config.extensions.join(" ")}`
+        : undefined;
+    const featuresString =
+      config.features.length > 0
+        ? ` \\\n--features ${config.features.join(" ")}`
+        : undefined;
+    setCommand(
+      `./ckan-devstaller${presetString} \\
+${ckanVersionString}${extensionsString ? extensionsString : ""}${featuresString ? featuresString : ""}`,
+    );
+  }, [config]);
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -35,72 +72,38 @@ export default function Builder() {
           </CodeBlock>
           <h2>Selected configuration</h2>
           <div>
-            <strong>CKAN version</strong>: 2.11.3
+            <strong>CKAN version</strong>: {config.ckanVersion}
             <br />
             <br />
-            <strong>Extensions:</strong>
-            <ul>
-              <li>DataStore</li>
-              <li>ckanext-scheming</li>
-              <li>DataPusher+</li>
-            </ul>
-            <strong>Extra features:</strong>
-            <ul>
-              <li>Enable SSH</li>
-            </ul>
+            {config.extensions.length > 0 && (
+              <>
+                <strong>Extensions:</strong>
+                <ul>
+                  {config.extensions.map((extension) => (
+                    <li key={extension}>{extension}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {config.features.length > 0 && (
+              <>
+                <strong>Features:</strong>
+                <ul>
+                  {config.features.map((feature) => (
+                    <li key={feature}>{feature}</li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         </div>
       </div>
       <div className="col-span-2">
         <h2>Configuration options</h2>
-        <h3>Presets</h3>
-        <Cards className="grid-cols-2">
-          <Card
-            className="bg-blue-100 dark:bg-blue-950 border-blue-300 dark:border-blue-900 border-2"
-            icon={<SailboatIcon />}
-            title="CKAN-only"
-          >
-            Installs CKAN with ckan-compose.
-          </Card>
-          <Card icon={<BlocksIcon />} title="CKAN and the DataStore extension">
-            Installs CKAN and the DataStore extension.
-          </Card>
-          <Card icon={<BarChartBigIcon />} title="datHere Default">
-            Installs CKAN, the DataStore extension, the ckanext-scheming
-            extension, and the DataPusher+ extension.
-          </Card>
-        </Cards>
-        <h3>CKAN version</h3>
-        <Cards>
-          <Card icon={<SailboatIcon />} title="2.11.3"></Card>
-          <Card icon={<SailboatIcon />} title="2.10.8"></Card>
-          <Card
-            icon={<SailboatIcon />}
-            title="Install a different version"
-          ></Card>
-          <Card
-            icon={<SailboatIcon />}
-            title="Clone from remote Git repository"
-          ></Card>
-        </Cards>
-        <h3>CKAN extensions</h3>
-        <Cards>
-          <Card icon={<TerminalSquareIcon />} title="ckanext-scheming"></Card>
-          <Card icon={<TerminalSquareIcon />} title="ckanext-gztr"></Card>
-          <Card icon={<TerminalSquareIcon />} title="DataStore"></Card>
-          <Card icon={<TerminalSquareIcon />} title="DataPusher+"></Card>
-          <Card icon={<TerminalSquareIcon />} title="ckanext-spatial"></Card>
-          <Card icon={<TerminalSquareIcon />} title="Custom extension"></Card>
-        </Cards>
-        <h3>Extra features</h3>
-        <Cards>
-          <Card icon={<TerminalSquareIcon />} title="Enable SSH">
-            Installs openssh-server and net-tools.
-          </Card>
-          <Card icon={<TerminalSquareIcon />} title="Run a Bash script">
-            Run a Bash script before or after any step during the installation.
-          </Card>
-        </Cards>
+        <PresetsBuilderSection config={config} setConfig={setConfig} />
+        <CKANVersionBuilderSection config={config} setConfig={setConfig} />
+        <CKANExtensionsBuilderSection config={config} setConfig={setConfig} />
+        <FeaturesBuilderSection config={config} setConfig={setConfig} />
       </div>
     </div>
   );

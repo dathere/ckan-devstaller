@@ -2,6 +2,7 @@ import "@/app/global.css";
 import { RootProvider } from "fumadocs-ui/provider";
 import localFont from "next/font/local";
 import Script from "next/script";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = localFont({ src: "../lib/inter.ttf" });
 
@@ -18,6 +19,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
           data-web-vitals="true"
           strategy="afterInteractive"
         />
+        <Toaster closeButton richColors />
       </body>
     </html>
   );
