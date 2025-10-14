@@ -23,9 +23,9 @@ use xshell_venv::{Shell, VirtualEnv};
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Args {
-    /// Skip interactive steps and install the CKAN-only preset
+    /// Skip interactive steps
     #[arg(short, long)]
-    default: bool,
+    skip_interactive: bool,
     #[arg(short, long)]
     /// CKAN version to install defined by semantic versioning from official releases from https://github.com/ckan/ckan
     ckan_version: Option<String>,
@@ -146,7 +146,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         default_config_text.push_str("\n- Disable DRUF mode for DataPusher+");
     }
     println!("{default_config_text}");
-    let answer_customize = if args.default {
+    let answer_customize = if args.skip_interactive {
         false
     } else {
         Confirm::new("Would you like to customize the configuration for your CKAN installation?")
@@ -186,7 +186,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         config
     };
 
-    let begin_installation = if args.default {
+    let begin_installation = if args.skip_interactive {
         true
     } else {
         Confirm::new("Would you like to begin the installation?").prompt()?
