@@ -111,7 +111,7 @@ function Hero() {
         <Cards>
           <Card
             icon={<ZapIcon />}
-            href="/docs/quick-start"
+            href="/docs"
             title="Quick start"
           >
             Get started with ckan-devstaller and install CKAN within minutes
