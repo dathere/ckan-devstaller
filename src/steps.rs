@@ -260,75 +260,94 @@ pub fn step_install_datapusher_plus_extension(
     let app_main_section = conf.section_mut(Some("app:main")).unwrap();
     let mut ckan_plugins = app_main_section.get("ckan.plugins").unwrap().to_string();
     ckan_plugins.push_str(" datapusher_plus");
-    cmd!(
-        sh,
-        "ckan config-tool /etc/ckan/default/ckan.ini -s app:main ckan.plugins={ckan_plugins}"
-    )
-    .run()?;
-    cmd!(sh, "ckan config-tool /etc/ckan/default/ckan.ini -s app:main scheming.dataset_schemas=ckanext.datapusher_plus:dataset-druf.yaml").run()?;
-    // app_main_section.insert("ckan.plugins", ckan_plugins);
-    // app_main_section.insert(
-    //     "scheming.dataset_schemas",
-    //     "ckanext.datapusher_plus:dataset-druf.yaml",
-    // );
-    // conf.write_to_file("/etc/ckan/default/ckan.ini")?;
-    let dpp_default_config = r#"
-ckanext.datapusher_plus.use_proxy = false
-ckanext.datapusher_plus.download_proxy = 
-ckanext.datapusher_plus.ssl_verify = false
-# supports INFO, DEBUG, TRACE - use DEBUG or TRACE when debugging scheming Formulas
-ckanext.datapusher_plus.upload_log_level = INFO
-ckanext.datapusher_plus.formats = csv tsv tab ssv xls xlsx xlsxb xlsm ods geojson shp qgis zip
-ckanext.datapusher_plus.pii_screening = false
-ckanext.datapusher_plus.pii_found_abort = false
-ckanext.datapusher_plus.pii_regex_resource_id_or_alias =
-ckanext.datapusher_plus.pii_show_candidates = false
-ckanext.datapusher_plus.pii_quick_screen = false
-ckanext.datapusher_plus.qsv_bin = /usr/local/bin/qsvdp
-ckanext.datapusher_plus.preview_rows = 100
-ckanext.datapusher_plus.download_timeout = 300
-ckanext.datapusher_plus.max_content_length = 1256000000000
-ckanext.datapusher_plus.chunk_size = 16384
-ckanext.datapusher_plus.default_excel_sheet = 0
-ckanext.datapusher_plus.sort_and_dupe_check = true
-ckanext.datapusher_plus.dedup = false
-ckanext.datapusher_plus.unsafe_prefix = unsafe_
-ckanext.datapusher_plus.reserved_colnames = _id
-ckanext.datapusher_plus.prefer_dmy = false
-ckanext.datapusher_plus.ignore_file_hash = true
-ckanext.datapusher_plus.auto_index_threshold = 3
-ckanext.datapusher_plus.auto_index_dates = true
-ckanext.datapusher_plus.auto_unique_index = true
-ckanext.datapusher_plus.summary_stats_options =
-ckanext.datapusher_plus.add_summary_stats_resource = false
-ckanext.datapusher_plus.summary_stats_with_preview = false
-ckanext.datapusher_plus.qsv_stats_string_max_length = 32767
-ckanext.datapusher_plus.qsv_dates_whitelist = date,time,due,open,close,created
-ckanext.datapusher_plus.qsv_freq_limit = 10
-ckanext.datapusher_plus.auto_alias = true
-ckanext.datapusher_plus.auto_alias_unique = false
-ckanext.datapusher_plus.copy_readbuffer_size = 1048576
-ckanext.datapusher_plus.type_mapping = {"String": "text", "Integer": "numeric","Float": "numeric","DateTime": "timestamp","Date": "date","NULL": "text"}
-ckanext.datapusher_plus.auto_spatial_simplication = true
-ckanext.datapusher_plus.spatial_simplication_relative_tolerance = 0.1
-ckanext.datapusher_plus.latitude_fields = latitude,lat
-ckanext.datapusher_plus.longitude_fields = longitude,long,lon
-ckanext.datapusher_plus.jinja2_bytecode_cache_dir = /tmp/jinja2_butecode_cache
-ckanext.datapusher_plus.auto_unzip_one_file = true
-ckanext.datapusher_plus.api_token = <CKAN service account token for CKAN user with sysadmin privileges>
-ckanext.datapusher_plus.describeGPT_api_key = <Token for OpenAI API compatible service>
-ckanext.datapusher_plus.file_bin = /usr/bin/file
-ckanext.datapusher_plus.enable_druf = false
-ckanext.datapusher_plus.enable_form_redirect = true
-"#;
-    std::fs::write("dpp_default_config.ini", dpp_default_config)?;
-    cmd!(
-        sh,
-        "ckan config-tool /etc/ckan/default/ckan.ini -f dpp_default_config.ini"
-    )
-    .run()?;
-    let resource_formats_str =
-        std::fs::read_to_string("/usr/lib/ckan/default/src/ckan/config/resource_formats.json")?;
+    app_main_section.insert("ckan.plugins", ckan_plugins);
+    app_main_section.insert(
+        "scheming.dataset_schemas",
+        "ckanext.datapusher_plus:dataset-druf.yaml",
+    );
+    app_main_section.insert("ckanext.datapusher_plus.use_proxy", "false");
+    app_main_section.insert("ckanext.datapusher_plus.download_proxy", "");
+    app_main_section.insert("ckanext.datapusher_plus.ssl_verify", "false");
+    app_main_section.insert("ckanext.datapusher_plus.upload_log_level", "INFO");
+    app_main_section.insert(
+        "ckanext.datapusher_plus.formats",
+        "csv tsv tab ssv xls xlsx xlsxb xlsm ods geojson shp qgis zip",
+    );
+    app_main_section.insert("ckanext.datapusher_plus.pii_screening", "false");
+    app_main_section.insert("ckanext.datapusher_plus.pii_found_abort", "false");
+    app_main_section.insert("ckanext.datapusher_plus.pii_regex_resource_id_or_alias", "");
+    app_main_section.insert("ckanext.datapusher_plus.pii_show_candidates", "false");
+    app_main_section.insert("ckanext.datapusher_plus.pii_quick_screen", "false");
+    app_main_section.insert("ckanext.datapusher_plus.qsv_bin", "/usr/local/bin/qsvdp");
+    app_main_section.insert("ckanext.datapusher_plus.preview_rows", "100");
+    app_main_section.insert("ckanext.datapusher_plus.download_timeout", "300");
+    app_main_section.insert(
+        "ckanext.datapusher_plus.max_content_length",
+        "1256000000000",
+    );
+    app_main_section.insert("ckanext.datapusher_plus.chunk_size", "16384");
+    app_main_section.insert("ckanext.datapusher_plus.default_excel_sheet", "0");
+    app_main_section.insert("ckanext.datapusher_plus.sort_and_dupe_check", "true");
+    app_main_section.insert("ckanext.datapusher_plus.dedup", "false");
+    app_main_section.insert("ckanext.datapusher_plus.unsafe_prefix", "unsafe_");
+    app_main_section.insert("ckanext.datapusher_plus.reserved_colnames", "_id");
+    app_main_section.insert("ckanext.datapusher_plus.prefer_dmy", "false");
+    app_main_section.insert("ckanext.datapusher_plus.ignore_file_hash", "true");
+    app_main_section.insert("ckanext.datapusher_plus.auto_index_threshold", "3");
+    app_main_section.insert("ckanext.datapusher_plus.auto_index_dates", "true");
+    app_main_section.insert("ckanext.datapusher_plus.auto_unique_index", "true");
+    app_main_section.insert("ckanext.datapusher_plus.summary_stats_options", "");
+    app_main_section.insert(
+        "ckanext.datapusher_plus.add_summary_stats_resource",
+        "false",
+    );
+    app_main_section.insert(
+        "ckanext.datapusher_plus.summary_stats_with_preview",
+        "false",
+    );
+    app_main_section.insert(
+        "ckanext.datapusher_plus.qsv_stats_string_max_length",
+        "32767",
+    );
+    app_main_section.insert(
+        "ckanext.datapusher_plus.qsv_dates_whitelist",
+        "date,time,due,open,close,created",
+    );
+    app_main_section.insert("ckanext.datapusher_plus.qsv_freq_limit", "10");
+    app_main_section.insert("ckanext.datapusher_plus.auto_alias", "true");
+    app_main_section.insert("ckanext.datapusher_plus.auto_alias_unique", "false");
+    app_main_section.insert("ckanext.datapusher_plus.copy_readbuffer_size", "1048576");
+    app_main_section.insert("ckanext.datapusher_plus.type_mapping", r#"{"String": "text", "Integer": "numeric","Float": "numeric","DateTime": "timestamp","Date": "date","NULL": "text"}"#);
+    app_main_section.insert("ckanext.datapusher_plus.auto_spatial_simplication", "true");
+    app_main_section.insert(
+        "ckanext.datapusher_plus.spatial_simplication_relative_tolerance",
+        "0.1",
+    );
+    app_main_section.insert("ckanext.datapusher_plus.latitude_fields", "latitude,lat");
+    app_main_section.insert(
+        "ckanext.datapusher_plus.longitude_fields",
+        "longitude,long,lon",
+    );
+    app_main_section.insert(
+        "ckanext.datapusher_plus.jinja2_bytecode_cache_dir",
+        "/tmp/jinja2_butecode_cache",
+    );
+    app_main_section.insert("ckanext.datapusher_plus.auto_unzip_one_file", "true");
+    app_main_section.insert(
+        "ckanext.datapusher_plus.api_token",
+        "<CKAN service account token for CKAN user with sysadmin privileges>",
+    );
+    app_main_section.insert(
+        "ckanext.datapusher_plus.describeGPT_api_key",
+        "<Token for OpenAI API compatible service>",
+    );
+    app_main_section.insert("ckanext.datapusher_plus.file_bin", "/usr/bin/file");
+    app_main_section.insert("ckanext.datapusher_plus.enable_druf", "false");
+    app_main_section.insert("ckanext.datapusher_plus.enable_form_redirect", "true");
+    conf.write_to_file("/etc/ckan/default/ckan.ini")?;
+    let resource_formats_str = std::fs::read_to_string(
+        "/usr/lib/ckan/default/src/ckan/ckan/config/resource_formats.json",
+    )?;
     let mut resource_formats_val: serde_json::Value = serde_json::from_str(&resource_formats_str)?;
     let all_resource_formats = resource_formats_val
         .get_mut(0)
@@ -342,7 +361,7 @@ ckanext.datapusher_plus.enable_form_redirect = true
         []
     ]));
     std::fs::write(
-        "/usr/lib/ckan/default/src/ckan/config/resource_formats.json",
+        "/usr/lib/ckan/default/src/ckan/ckan/config/resource_formats.json",
         serde_json::to_string(&resource_formats_val)?,
     )?;
     cmd!(sh, "sudo locale-gen en_US.UTF-8").run()?;
