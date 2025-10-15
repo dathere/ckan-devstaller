@@ -150,7 +150,7 @@ function PreviewImages() {
   ];
 
   return (
-    <div className="p-8 min-w-[800px] overflow-hidden xl:-mx-12 dark:[mask-image:linear-gradient(to_top,transparent,white_40px)]">
+    <div className="p-8 min-w-[600px] md:min-w-[800px] overflow-hidden xl:-mx-12 dark:[mask-image:linear-gradient(to_top,transparent,white_40px)]">
       <div className="absolute flex flex-row left-1/2 -translate-1/2 bottom-4 z-2 p-1 rounded-full bg-fd-card border shadow-xl dark:shadow-fd-background">
         {/* <div
           role="none"
@@ -176,7 +176,7 @@ function PreviewImages() {
           alt="preview"
           priority
           className={cn(
-            "rounded-xl w-full select-none duration-1000 animate-in fade-in -mb-60 slide-in-from-bottom-12 lg:-mb-0",
+            "rounded-xl w-full select-none duration-1000 animate-in fade-in md:-mb-60 slide-in-from-bottom-12 lg:-mb-0",
             active !== i && "hidden",
           )}
         />

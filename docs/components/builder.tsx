@@ -52,8 +52,8 @@ ${ckanVersionString}${extensionsString ? extensionsString : ""}${featuresString 
   }, [config]);
 
   return (
-    <div className="grid grid-cols-3 gap-4">
-      <div className="col-span-1 border-r-2 pr-4">
+    <div className="md:grid md:grid-cols-3 md:gap-4">
+      <div className="md:col-span-1 md:border-r-2 md:pr-4">
         <div className="sticky top-8">
           <h2>ckan-devstaller command</h2>
           <CodeBlock title="Installation command">
@@ -87,7 +87,7 @@ ${ckanVersionString}${extensionsString ? extensionsString : ""}${featuresString 
           </div>
         </div>
       </div>
-      <div className="col-span-2">
+      <div className="md:col-span-2">
         <h2>Configuration options</h2>
         <PresetsBuilderSection config={config} setConfig={setConfig} />
         <CKANVersionBuilderSection config={config} setConfig={setConfig} />
