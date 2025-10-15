@@ -1,0 +1,95 @@
+---
+title: Developing with WSL
+description: Tips on how to develop ckan-devstaller on a Windows machine by leveraging Windows Subsystem for Linux.
+---
+
+<Callout title="Work in Progress" type="error">
+  This page is a work in progress and is not intended to be used yet.
+</Callout>
+
+When developing ckan-devstaller on Windows, using Windows Subsystem for Linux (WSL) can be advantageous to demo an Ubuntu 22.04 environment without having to set up a virtual machine.
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { File, Folder, Files } from 'fumadocs-ui/components/files';
+
+<Steps>
+<Step>
+
+### Install the Ubuntu-22.04 distribution
+
+You'll need to have the Ubuntu-22.04 distribution installed by running the following command:
+
+```bash
+wsl --install Ubuntu-22.04 --version 2
+```
+
+</Step>
+
+<Step>
+
+### Export a base image
+
+</Step>
+</Steps>
+
+Here's the expected set up where we create a WSL folder:
+
+```files
+/c/Users/rzmk/WSL
+├── images
+|   ├── ubuntu-22-04-snapshot.tar
+├── instances
+|   ├── cdr.vdhx
+```
+
+Now try to access your new Ubuntu 22.04 instance `cdr` as the `root` user by running:
+
+```bash
+wsl -d cdr
+```
+
+Once logged in as `root`, you'll want to edit the `/etc/wsl.conf` file and modify it so you can login as an admin user instead of `root`. We can use the `nano` editor to modify the file:
+
+```bash
+nano /etc/wsl.conf
+```
+
+Modify the file by adding a `[user]` section with the value `default=rzmk` (where `rzmk` is your username). The file should look similar to this:
+
+```ini
+[boot]
+systemd=true
+
+[user]
+default=rzmk
+```
+
+Now leave your instance:
+
+```bash
+exit
+```
+
+Then terminate the instance:
+
+```bash
+wsl --terminate cdr
+```
+
+Run the instance again and you should be logged in as your admin user by default now:
+
+```bash
+wsl -d cdr
+```
+
+Great, now you can go to the home directory and run one of the [quick start](/docs) scripts:
+
+```bash
+cd ~/
+```
+
+When you want to remove your instance (e.g. so that you can start a brand new instance) then run the following to unregister it:
+
+```bash
+wsl --unregister cdr
+```
