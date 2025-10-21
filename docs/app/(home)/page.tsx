@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: Would need to look into this trivial issue */
 "use client";
 
+import { CodeBlock } from "fumadocs-ui/components/codeblock";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { cn } from "fumadocs-ui/utils/cn";
 import {
@@ -8,11 +9,14 @@ import {
   GitMergeIcon,
   HomeIcon,
   SailboatIcon,
+  TerminalIcon,
+  Trash2Icon,
   ZapIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { type HTMLProps, type ReactNode, useState } from "react";
+import { Pre } from "@/components/codeblock";
 import { buttonVariants } from "@/components/ui/button";
 import CkanDevstallerDemo from "./ckan-devstaller-demo.gif";
 
@@ -37,6 +41,7 @@ export default function HomePage() {
         >
           <div className="relative mb-4">
             <Hero />
+            <Why />
           </div>
         </div>
         <hr className="mt-12 mb-4" />
@@ -48,10 +53,20 @@ export default function HomePage() {
               href="https://dathere.com"
               target="_blank"
               className="font-medium text-blue-400"
+              rel="noopener"
             >
               datHere
             </a>
-            . <a href="https://dathere.com/privacy-policy/" target="_blank" className="font-medium text-blue-400">Privacy Policy</a>.
+            .{" "}
+            <a
+              href="https://dathere.com/privacy-policy/"
+              target="_blank"
+              className="font-medium text-blue-400"
+              rel="noopener"
+            >
+              Privacy Policy
+            </a>
+            .
           </p>
         </footer>
       </main>
@@ -123,33 +138,28 @@ function Hero() {
           Source Code
         </Link>
       </div>
-        <Cards>
-          <Card
-            icon={<ZapIcon />}
-            href="/docs"
-            title="Quick start"
-          >
-            Get started with ckan-devstaller and install CKAN within minutes
-          </Card>
-          <Card icon={<BlocksIcon />} href="/docs/builder" title="Builder">
-            Customize your installation with an interactive web GUI
-          </Card>
-          <Card
-            icon={<HomeIcon />}
-            href="/docs/reference/installation-architecture"
-            title="Installation architecture"
-          >
-            Learn about where files are installed after running
-            ckan-devstaller
-          </Card>
-          <Card
-            icon={<GitMergeIcon />}
-            href="https://github.com/dathere/ckan-devstaller"
-            title="Source code"
-          >
-            View the source code of ckan-devstaller on GitHub
-          </Card>
-        </Cards>
+      <Cards>
+        <Card icon={<ZapIcon />} href="/docs" title="Quick start">
+          Get started with ckan-devstaller and install CKAN within minutes
+        </Card>
+        <Card icon={<BlocksIcon />} href="/docs/builder" title="Builder">
+          Customize your installation with an interactive web GUI
+        </Card>
+        <Card
+          icon={<HomeIcon />}
+          href="/docs/reference/installation-architecture"
+          title="Installation architecture"
+        >
+          Learn about where files are installed after running ckan-devstaller
+        </Card>
+        <Card
+          icon={<GitMergeIcon />}
+          href="https://github.com/dathere/ckan-devstaller"
+          title="Source code"
+        >
+          View the source code of ckan-devstaller on GitHub
+        </Card>
+      </Cards>
       <PreviewImages />
     </div>
   );
@@ -196,6 +206,216 @@ function PreviewImages() {
           )}
         />
       ))}
+    </div>
+  );
+}
+
+function Why() {
+  return (
+    <div className="relative overflow-hidden border-x border-t p-2">
+      <WhyInteractive
+        codeblockInstall={
+          <CodeBlock lang="bash">
+            <Pre className="text-wrap pl-4">./ckan-devstaller</Pre>
+          </CodeBlock>
+        }
+        codeblockUninstall={
+          <CodeBlock lang="bash">
+            <Pre className="text-wrap pl-4">./ckan-devstaller uninstall</Pre>
+          </CodeBlock>
+        }
+      />
+    </div>
+  );
+}
+
+export function WhyInteractive(props: {
+  codeblockInstall: ReactNode;
+  codeblockUninstall: ReactNode;
+}) {
+  const [active, setActive] = useState(0);
+  const items = [
+    [
+      <ZapIcon className="w-4 h-4 inline-block" key={0} />,
+      "Install CKAN within minutes",
+    ],
+    [
+      <BlocksIcon className="w-4 h-4 inline-block" key={1} />,
+      "Customize your installation",
+    ],
+    [
+      <TerminalIcon className="w-4 h-4 inline-block" key={2} />,
+      "Designed for developers",
+    ],
+    [
+      <Trash2Icon className="w-4 h-4 inline-block" key={3} />,
+      "Uninstall with ease",
+    ],
+  ];
+
+  return (
+    <div
+      id="why-interactive"
+      className="flex flex-col-reverse gap-3 md:flex-row md:min-h-[200px]"
+    >
+      <div className="flex flex-col">
+        {items.map((item, i) => (
+          <button
+            key={item[1] as string}
+            ref={(element) => {
+              if (!element || i !== active) return;
+            }}
+            type="button"
+            className={cn(
+              "transition-colors text-nowrap border border-transparent rounded-lg px-3 py-2.5 text-start text-sm text-fd-muted-foreground font-medium",
+              i === active
+                ? "text-fd-primary bg-fd-primary/10 border-fd-primary/10"
+                : "hover:text-fd-accent-foreground/80 cursor-pointer",
+            )}
+            onClick={() => {
+              setActive(i);
+            }}
+          >
+            {item[0]} {item[1]}
+          </button>
+        ))}
+      </div>
+      <style>
+        {`
+        @keyframes why-interactive-x {
+          from {
+            width: 0px;
+          }
+          
+          to {
+            width: 100%;
+          }
+        }`}
+      </style>
+
+      <div className="flex-1 p-4 border border-fd-primary/10 bg-fd-card/40 rounded-lg shadow-lg">
+        {active === 0 ? (
+          <WhyPanel>
+            <h3>
+              <ZapIcon className="w-4 h-4 inline-block mr-1 mb-1" />
+              Install CKAN within minutes.
+            </h3>
+            <p>
+              One of the primary goals of ckan-devstaller is to ease
+              installation of CKAN for development. Built with Rust for speed
+              and streamlining installation with{" "}
+              <a href="https://github.com/tino097/ckan-compose/tree/ckan-devstaller">
+                ckan-compose
+              </a>
+              , ckan-devstaller improves installation speeds{" "}
+              <strong>from hours/days to just minutes</strong> depending on your
+              download speed.
+            </p>
+            <div className="flex gap-2">
+              <Link href="/docs" className={cn(buttonVariants(), "not-prose")}>
+                Get started
+              </Link>
+              <Link
+                href="/docs/builder"
+                className={cn(buttonVariants(), "not-prose")}
+              >
+                Customize your installation
+              </Link>
+            </div>
+          </WhyPanel>
+        ) : null}
+        {active === 1 ? (
+          <WhyPanel>
+            <h3>
+              <BlocksIcon className="w-4 h-4 inline-block mr-1 mb-1" />
+              Customize your installation with the Builder.
+            </h3>
+            <p>
+              Try out the interactive web GUI for customizing your CKAN
+              installation. You can select:
+            </p>
+            <ul>
+              <li>Presets</li>
+              <li>CKAN version</li>
+              <li>Extensions</li>
+              <li>Features</li>
+            </ul>
+            <p>
+              Then you can copy the provided ckan-devstaller command to run your
+              selected configuration.
+            </p>
+            <div className="mt-4 flex flex-row items-center gap-1.5 not-prose">
+              <Link href="/docs/builder" className={cn(buttonVariants())}>
+                Try out the Builder
+              </Link>
+            </div>
+          </WhyPanel>
+        ) : null}
+        {active === 2 ? (
+          <WhyPanel>
+            <h3>
+              <TerminalIcon className="w-4 h-4 inline-block mr-1 mb-1" />
+              Designed for developers.
+            </h3>
+            <p>
+              We've kept development use cases in mind while developing
+              ckan-devstaller, such as:
+            </p>
+            <ul>
+              <li>Trying out a new version of CKAN</li>
+              <li>Developing CKAN extensions and themes</li>
+            </ul>
+            <div className="flex gap-2">
+              <Link
+                href="/docs/reference/installation-architecture"
+                className={cn(buttonVariants(), "not-prose")}
+              >
+                View the installation architecture
+              </Link>
+              <Link
+                href="https://github.com/dathere/ckan-devstaller"
+                className={cn(buttonVariants({ variant: "ghost" }))}
+              >
+                Source code
+              </Link>
+            </div>
+          </WhyPanel>
+        ) : null}
+        {active === 3 ? (
+          <WhyPanel>
+            <h3>
+              <Trash2Icon className="w-4 h-4 inline-block mr-1 mb-1" />
+              Uninstall CKAN with ease.
+            </h3>
+            <p>
+              After you've installed CKAN with ckan-devstaller, you can
+              uninstall CKAN with ease. This allows for quickly re-installing
+              CKAN for a different use case.
+            </p>
+            {props.codeblockUninstall}
+            <Link
+              href="/docs/tutorials/uninstall-ckan"
+              className={cn(buttonVariants(), "not-prose")}
+            >
+              Learn more about uninstalling
+            </Link>
+          </WhyPanel>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function WhyPanel(props: HTMLProps<HTMLDivElement>) {
+  return (
+    <div
+      {...props}
+      className={cn(
+        "duration-700 animate-in fade-in text-sm prose",
+        props.className,
+      )}
+    >
+      {props.children}
     </div>
   );
 }
