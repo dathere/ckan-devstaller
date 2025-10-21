@@ -229,7 +229,7 @@ function Why() {
   );
 }
 
-export function WhyInteractive(props: {
+function WhyInteractive(props: {
   codeblockInstall: ReactNode;
   codeblockUninstall: ReactNode;
 }) {
