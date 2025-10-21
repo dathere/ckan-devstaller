@@ -39,6 +39,21 @@ export default function HomePage() {
             <Hero />
           </div>
         </div>
+        <hr className="mt-12 mb-4" />
+        <footer className="flex flex-col bg-brand-secondary pb-12 text-brand-secondary-foreground rounded-2xl">
+          <p className="mb-1 text-xl font-semibold">ckan-devstaller</p>
+          <p className="text-xs">
+            Provided by{" "}
+            <a
+              href="https://dathere.com"
+              target="_blank"
+              className="font-medium text-blue-400"
+            >
+              datHere
+            </a>
+            . <a href="https://dathere.com/privacy-policy/" target="_blank" className="font-medium text-blue-400">Privacy Policy</a>.
+          </p>
+        </footer>
       </main>
     </>
   );
