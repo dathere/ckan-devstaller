@@ -283,8 +283,8 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
             )?;
         }
 
-        println!("\n{}", success_text("Running CKAN instance..."));
         if !args.skip_run {
+            println!("\n{}", success_text("Running CKAN instance..."));
             cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini run").run()?;
         }
     } else {
