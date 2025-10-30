@@ -1,6 +1,6 @@
 {
     "pages": [
-        "...",
-        "!developing-with-wsl"
+        "installation-architecture",
+        "developing-with-wsl"
     ]
 }

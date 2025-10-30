@@ -11,7 +11,7 @@ pub fn step_intro() {
     );
     println!(
         "This installer should assist in setting up {} from a source installation along with ckan-compose. If you have any issues, please report them at https://support.dathere.com or https://github.com/dathere/ckan-devstaller/issues.",
-        highlighted_text("CKAN 2.11.3")
+        highlighted_text("CKAN 2.11.4")
     );
     println!(
         "\nYou may also learn more about ckan-devstaller at https://ckan-devstaller.dathere.com."

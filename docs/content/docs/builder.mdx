@@ -4,6 +4,19 @@ description: Customize your CKAN installation before running ckan-devstaller.
 icon: Blocks
 ---
 
+ckan-devstaller attempts to install a CKAN instance from source along with [ckan-compose](https://github.com/tino097/ckan-compose/tree/ckan-devstaller) and other optional features, intended for development use in a new Ubuntu 22.04 instance.
+
+<Callout title="Please run ckan-devstaller in a new Ubuntu 22.04 instance only" type="error">Make sure `ckan-devstaller` is run in a **new** Ubuntu 22.04 instance. Do NOT run `ckan-devstaller` in an existing instance that is important for your usage.</Callout>
+
+import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
+
+<Accordions type="single">
+  <Accordion title="Note for VirtualBox users">If you are using Ubuntu 22.04 on VirtualBox, you may need to add your user to the sudoers file before running the ckan-devstaller install script. Open a terminal in your virtual machine (VM), run `su -` and log in as the root user with the password you used to set up the VM, then type: <br /><br />`sudo adduser <username> sudo`<br /><br /> where `<username>` is your username then restart your VM and run the ckan-devstaller installer script.</Accordion>
+  <Accordion title="Note for ARM64 users">Currently `ckan-devstaller` supports `x86_64` architecture. `ARM64` support is planned.</Accordion>
+</Accordions>
+
+---
+
 import Builder from "@/components/builder";
 
 <Builder />

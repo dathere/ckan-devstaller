@@ -1,0 +1,33 @@
+---
+title: Changelog for ckan-devstaller v0.3.1 (2025-10-30)
+---
+
+## Updated CKAN default versions to latest stable versions
+
+We have updated ckan-devstaller to suggest the recent releases of CKAN [2.11.4](https://docs.ckan.org/en/2.11/changelog.html#v-2-11-4-2025-10-29) and [2.10.9](https://docs.ckan.org/en/2.10/changelog.html#v-2-10-9-2025-10-29).
+
+## Added the "Developing with WSL" page in the Reference section
+
+Developers using Windows may benefit from the new [Developing with WSL](/docs/reference/developing-with-wsl) page in the Reference section to try their builds of ckan-devstaller and verify things work on a new install of Ubuntu 22.04.
+
+Alternatively if not trying to reset an entire WSL environment, developers can look into [`ckan-devstaller uninstall`](/docs/tutorials/uninstall-ckan).
+
+## Added install script switch to Builder page
+
+There is now a switch on the Builder page that is enabled by default for including the installation script for ckan-devstaller before running it. This is necessary for users that don't have ckan-devstaller installed yet and are using the Builder over the Quick Start scripts.
+
+## Default start with the Builder page
+
+We've changed "Get Started" links (and similar links) to the Builder page instead of the Quick Start page to users can quickly access the Builder again and get started using ckan-devstaller.
+
+## Update ckan-compose links to use ckan-devstaller branch
+
+We've updated ckan-compose links to use [the ckan-devstaller branch](https://github.com/tino097/ckan-compose/tree/ckan-devstaller).
+
+## Update VirtualBox notice with better formatting
+
+To ensure users using VirtualBox see the full command for adding a user to the sudoers file, we've improved the formatting of the note.
+
+## GitHub Action to verify CKAN install runs
+
+We've added a GitHub Action to run on push to the main branch to verify that a CKAN-only install runs. This doesn't include verbose testing but rather ensuring that the ckan-devstaller finishes without errors.

@@ -27,6 +27,9 @@ struct Args {
     /// Skip interactive steps
     #[arg(short, long)]
     skip_interactive: bool,
+    /// Skip running CKAN at the end of installation
+    #[arg(short, long)]
+    skip_run: bool,
     #[arg(short, long)]
     /// CKAN version to install defined by semantic versioning from official releases from https://github.com/ckan/ckan
     ckan_version: Option<String>,
@@ -110,7 +113,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         ckan_version: if args.ckan_version.is_some() {
             args.ckan_version.unwrap()
         } else {
-            "2.11.3".to_string()
+            "2.11.4".to_string()
         },
         sysadmin: default_sysadmin.clone(),
         extension_datastore: args
@@ -134,7 +137,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
     if config.ssh {
         default_config_text.push_str("\n- Install openssh-server to enable SSH access");
     }
-    default_config_text.push_str("\n- Install ckan-compose (https://github.com/tino097/ckan-compose) which sets up the CKAN backend (PostgreSQL, SOLR, Redis)");
+    default_config_text.push_str("\n- Install ckan-compose (https://github.com/tino097/ckan-compose/tree/ckan-devstaller) which sets up the CKAN backend (PostgreSQL, SOLR, Redis)");
     default_config_text.push_str(format!("\n- Install CKAN v{}", config.ckan_version).as_str());
     if config.extension_datastore {
         default_config_text.push_str("\n- Install the DataStore extension");
@@ -281,7 +284,9 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         }
 
         println!("\n{}", success_text("Running CKAN instance..."));
-        cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini run").run()?;
+        if !args.skip_run {
+            cmd!(sh, "ckan -c /etc/ckan/default/ckan.ini run").run()?;
+        }
     } else {
         println!("Cancelling installation.");
     }

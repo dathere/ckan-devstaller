@@ -4,14 +4,14 @@ description: Get started with ckan-devstaller and install CKAN within minutes.
 icon: Zap
 ---
 
-ckan-devstaller attempts to install a CKAN instance from source along with [ckan-compose](https://github.com/tino097/ckan-compose) and other optional features, intended for development use in a new Ubuntu 22.04 instance.
+ckan-devstaller attempts to install a CKAN instance from source along with [ckan-compose](https://github.com/tino097/ckan-compose/tree/ckan-devstaller) and other optional features, intended for development use in a new Ubuntu 22.04 instance.
 
 <Callout title="Please run ckan-devstaller in a new Ubuntu 22.04 instance only" type="error">Make sure `ckan-devstaller` is run in a **new** Ubuntu 22.04 instance. Do NOT run `ckan-devstaller` in an existing instance that is important for your usage.</Callout>
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
 
 <Accordions type="single">
-  <Accordion title="Note for VirtualBox users">If you are using Ubuntu 22.04 on VirtualBox, you may need to add your user to the sudoers file before running the ckan-devstaller install script. Open a terminal in your virtual machine (VM), run `su -` and log in as the root user with the password you used to set up the VM, then type `sudo adduser <username> sudo` where `<username>` is your username then restart your VM and run the ckan-devstaller installer script.</Accordion>
+  <Accordion title="Note for VirtualBox users">If you are using Ubuntu 22.04 on VirtualBox, you may need to add your user to the sudoers file before running the ckan-devstaller install script. Open a terminal in your virtual machine (VM), run `su -` and log in as the root user with the password you used to set up the VM, then type: <br /><br />`sudo adduser <username> sudo`<br /><br /> where `<username>` is your username then restart your VM and run the ckan-devstaller installer script.</Accordion>
   <Accordion title="Note for ARM64 users">Currently `ckan-devstaller` supports `x86_64` architecture. `ARM64` support is planned.</Accordion>
 </Accordions>
 
@@ -42,16 +42,16 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 ### Install the "CKAN-only" preset
 
-By running the following script, ckan-devstaller will be downloaded and the default configuration for installing CKAN 2.11.3 with ckan-compose will be selected. You can then customize your configuration interactively in your terminal after running this script.
+By running the following script, ckan-devstaller will be downloaded and the default configuration for installing CKAN with ckan-compose will be selected. You can then customize your configuration interactively in your terminal after running this script.
 
 ```bash
-wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.3.0/install.bash | bash
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.3.1/install.bash | bash
 ```
 
 If you'd rather skip the interactivity and go straight to installation, then run the following script instead:
 
 ```bash
-wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.3.0/install.bash | bash -s skip-interactive
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.3.1/install.bash | bash -s skip-interactive
 ```
 
 </Step>
@@ -62,7 +62,7 @@ wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.3.0/ins
 
 The following script will download ckan-devstaller and select the following configuration:
 
-- CKAN 2.11.3
+- CKAN latest stable version
 - [ckan-compose](https://github.com/tino097/ckan-compose/tree/ckan-devstaller)
 - [DataStore extension](https://docs.ckan.org/en/2.11/maintaining/datastore.html)
 - [ckanext-scheming extension](https://github.com/ckan/ckanext-scheming)
@@ -73,13 +73,13 @@ The following script will download ckan-devstaller and select the following conf
 You can then customize your configuration interactively in your terminal after running this script.
 
 ```bash
-wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.3.0/install.bash | bash -s dathere-default
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.3.1/install.bash | bash -s dathere-default
 ```
 
 If you'd rather skip the interactivity and go straight to installation, then run the following script instead:
 
 ```bash
-wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.3.0/install.bash | bash -s dathere-default skip-interactive
+wget -O - https://github.com/dathere/ckan-devstaller/releases/download/0.3.1/install.bash | bash -s dathere-default skip-interactive
 ```
 
 </Step>

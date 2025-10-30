@@ -11,7 +11,7 @@ sudo apt install curl -y
 cd ~/
 
 # Download the ckan-devstaller binary file
-curl -LO https://github.com/dathere/ckan-devstaller/releases/download/0.3.0/ckan-devstaller
+curl -LO https://github.com/dathere/ckan-devstaller/releases/download/0.3.1/ckan-devstaller
 
 # Add execute permission to ckan-devstaller binary file
 sudo chmod +x ./ckan-devstaller
@@ -22,9 +22,9 @@ skip_interactive=$2
 
 if [ $preset == "dathere-default" ]; then
     if [ $skip_interactive == "skip-interactive" ]; then
-        ./ckan-devstaller --ckan-version 2.11.3 --extensions ckanext-scheming DataStore DataPusher+ --features enable-ssh --skip-interactive
+        ./ckan-devstaller --ckan-version 2.11.4 --extensions ckanext-scheming DataStore DataPusher+ --features enable-ssh --skip-interactive
     else
-        ./ckan-devstaller --ckan-version 2.11.3 --extensions ckanext-scheming DataStore DataPusher+ --features enable-ssh
+        ./ckan-devstaller --ckan-version 2.11.4 --extensions ckanext-scheming DataStore DataPusher+ --features enable-ssh
     fi
 else
     if [ $preset == "skip-interactive" ]; then

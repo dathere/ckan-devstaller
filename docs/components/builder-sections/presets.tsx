@@ -49,7 +49,7 @@ export default function PresetsBuilderSection({
             setConfig({
               ...config,
               preset: "dathere-default",
-              ckanVersion: "2.11.3",
+              ckanVersion: "2.11.4",
               extensions: ["ckanext-scheming", "DataStore", "DataPusher+"],
               features: ["enable-ssh"],
             });

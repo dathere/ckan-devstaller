@@ -1,0 +1,23 @@
+name: Verify ckan-devstaller runs CKAN-only install successfully
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  ckanonlyinstall:
+    name: Run ckan-devstaller with a CKAN-only install
+    runs-on: ubuntu-22.04
+    permissions:
+      # For the git-auto-commit-action
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Cache cargo deps and target folder
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ". -> target"
+      - name: Run ckan-devstaller
+        run: cargo run --release --verbose -- --ckan-version 2.11.4 --skip-interactive --skip-run

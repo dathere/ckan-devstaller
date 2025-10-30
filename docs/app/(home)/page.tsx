@@ -118,7 +118,7 @@ function Hero() {
       </p>
       <div className="inline-flex items-center gap-3 max-md:mx-auto mb-8">
         <Link
-          href="/docs"
+          href="/docs/builder"
           className={cn(
             buttonVariants({ size: "lg", className: "rounded-full" }),
           )}
@@ -139,7 +139,7 @@ function Hero() {
         </Link>
       </div>
       <Cards>
-        <Card icon={<ZapIcon />} href="/docs" title="Quick start">
+        <Card icon={<ZapIcon />} href="/docs/builder" title="Quick start">
           Get started with ckan-devstaller and install CKAN within minutes
         </Card>
         <Card icon={<BlocksIcon />} href="/docs/builder" title="Builder">
@@ -312,14 +312,8 @@ function WhyInteractive(props: {
               download speed.
             </p>
             <div className="flex gap-2">
-              <Link href="/docs" className={cn(buttonVariants(), "not-prose")}>
+              <Link href="/docs/builder" className={cn(buttonVariants(), "not-prose")}>
                 Get started
-              </Link>
-              <Link
-                href="/docs/builder"
-                className={cn(buttonVariants(), "not-prose")}
-              >
-                Customize your installation
               </Link>
             </div>
           </WhyPanel>

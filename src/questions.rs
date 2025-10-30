@@ -16,7 +16,7 @@ pub fn question_ssh() -> Result<bool> {
 }
 
 pub fn question_ckan_version() -> Result<String> {
-    let ckan_version_options: Vec<&str> = vec!["2.11.3", "2.10.8", "Other"];
+    let ckan_version_options: Vec<&str> = vec!["2.11.4", "2.10.9", "Other"];
     let answer_ckan_version = Select::new(
         "What CKAN version would you like to install? (optional)",
         ckan_version_options,
@@ -26,7 +26,7 @@ pub fn question_ckan_version() -> Result<String> {
     if answer_ckan_version == "Other" {
         Ok(
             Text::new("What CKAN version would you like to install? (optional)")
-                .with_default("2.11.3")
+                .with_default("2.11.4")
                 .prompt()?,
         )
     } else {
