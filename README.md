@@ -29,6 +29,7 @@ You may find the following guides useful while developing with CKAN:
 - [Customize your config file](https://docs.ckan.org/en/latest/extensions/index.html)
 - [Create test data](https://docs.ckan.org/en/latest/maintaining/getting-started.html#creating-test-data)
 - [Visit ckan.org](https://ckan.org)
+- [Interact with your CKAN API at ckanaction.dathere.com](https://ckanaction.dathere.com)
 
 ## `ckan-devstaller` demos
 
