@@ -32,7 +32,7 @@ export default function HomePage() {
           background: `repeating-linear-gradient(to right, ${gridColor}, ${gridColor} 1px,transparent 1px,transparent 50px), repeating-linear-gradient(to bottom, ${gridColor}, ${gridColor} 1px,transparent 1px,transparent 50px)`,
         }}
       />
-      <main className="container relative max-w-[1100px] px-2 py-4 z-2 lg:py-8">
+      <main className="container relative max-w-[1100px] mx-auto px-2 py-4 z-2 lg:py-8">
         <div
           style={{
             background:
@@ -312,7 +312,10 @@ function WhyInteractive(props: {
               download speed.
             </p>
             <div className="flex gap-2">
-              <Link href="/docs/builder" className={cn(buttonVariants(), "not-prose")}>
+              <Link
+                href="/docs/builder"
+                className={cn(buttonVariants(), "not-prose")}
+              >
                 Get started
               </Link>
             </div>
