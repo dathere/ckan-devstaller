@@ -107,7 +107,7 @@ function Hero() {
       </h1>
       <p className="mb-2 text-fd-muted-foreground md:max-w-[80%] md:text-xl">
         ckan-devstaller is a command-line tool to automate installing CKAN for
-        development using ckan-compose on a new Ubuntu 24.04 instance.
+        development using ckan-compose on a new Ubuntu 22.04 instance.
       </p>
       <p className="mb-8 text-fd-muted-foreground md:max-w-[80%] md:text-sm">
         Provided by{" "}

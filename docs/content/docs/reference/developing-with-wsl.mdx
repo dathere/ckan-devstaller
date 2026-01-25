@@ -3,7 +3,7 @@ title: Developing with WSL
 description: Tips on how to develop ckan-devstaller on a Windows machine by leveraging Windows Subsystem for Linux.
 ---
 
-When developing ckan-devstaller on Windows, using Windows Subsystem for Linux (WSL) can be advantageous to demo an Ubuntu 24.04 environment without having to set up a virtual machine.
+When developing ckan-devstaller on Windows, using Windows Subsystem for Linux (WSL) can be advantageous to demo an Ubuntu 22.04 environment without having to set up a virtual machine.
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { File, Folder, Files } from 'fumadocs-ui/components/files';
@@ -11,12 +11,12 @@ import { File, Folder, Files } from 'fumadocs-ui/components/files';
 <Steps>
 <Step>
 
-### Install the Ubuntu-24.04 distribution
+### Install the Ubuntu-22.04 distribution
 
-You'll need to have the Ubuntu-24.04 distribution installed by running the following command:
+You'll need to have the Ubuntu-22.04 distribution installed by running the following command:
 
 ```bash
-wsl --install Ubuntu-24.04 --version 2
+wsl --install Ubuntu-22.04 --version 2
 ```
 
 </Step>
@@ -40,7 +40,7 @@ Here's the expected set up where we create a WSL folder:
 First we'll generate the `images/ubuntu-22-04-snapshot.tar` file:
 
 ```bash
-wsl --export Ubuntu-24.04 ./images/ubuntu-22-04-snapshot.tar
+wsl --export Ubuntu-22.04 ./images/ubuntu-22-04-snapshot.tar
 ```
 
 <Step>
@@ -59,7 +59,7 @@ wsl --import cdr ./instances ./images/ubuntu-22-04-snapshot.tar
 
 ### Access your new instance as root
 
-Now try to access your new Ubuntu 24.04 instance `cdr` as the `root` user by running:
+Now try to access your new Ubuntu 22.04 instance `cdr` as the `root` user by running:
 
 ```bash
 wsl -d cdr
