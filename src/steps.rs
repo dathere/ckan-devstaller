@@ -19,7 +19,7 @@ pub fn step_intro() {
     println!(
         "\n{}\n",
         important_text(
-            "This installer is only intended for a brand new installation of Ubuntu 22.04."
+            "This installer is only intended for a brand new installation of Ubuntu 24.04."
         )
     );
 }
