@@ -34,7 +34,7 @@ export default function PresetsBuilderSection({
             });
           }}
         >
-          Installs CKAN with ckan-compose. No CKAN extensions and extra features
+          Installs CKAN with ckan-compose. Default CKAN extension(s) and no extra features
           are installed.
         </Card>
         <Card
