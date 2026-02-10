@@ -241,6 +241,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         )
         .run()?;
         sh.change_dir("/usr/lib/ckan/default/src/ckan");
+        venv.pip_install("setuptools==81.0.0")?;
         cmd!(sh, "ckan generate config /etc/ckan/default/ckan.ini").run()?;
         cmd!(
             sh,
