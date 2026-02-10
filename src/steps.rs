@@ -205,7 +205,7 @@ pub fn step_install_ckanext_scheming_extension(
     );
     cmd!(
         sh,
-        "pip install -e git+https://github.com/ckan/ckanext-scheming.git#egg=ckanext-scheming"
+        "pip install -e ckanext-scheming@git+https://github.com/ckan/ckanext-scheming.git"
     )
     .run()?;
     let mut conf = ini::Ini::load_from_file("/etc/ckan/default/ckan.ini")?;
@@ -245,7 +245,7 @@ pub fn step_install_datapusher_plus_extension(
     sh.change_dir("/usr/lib/ckan/default/src");
     cmd!(
         sh,
-        "pip install -e git+https://github.com/dathere/datapusher-plus.git@main#egg=datapusher-plus"
+        "pip install -e datapusher-plus@git+https://github.com/dathere/datapusher-plus.git@main"
     )
     .run()?;
     sh.change_dir("/usr/lib/ckan/default/src/datapusher-plus");

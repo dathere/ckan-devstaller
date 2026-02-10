@@ -228,7 +228,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         venv.pip_upgrade("pip")?;
         venv.pip_install(
             format!(
-                "git+https://github.com/ckan/ckan.git@ckan-{}#egg=ckan[requirements]",
+                "ckan[requirements]@git+https://github.com/ckan/ckan.git@ckan-{}",
                 config.ckan_version
             )
             .as_str(),
