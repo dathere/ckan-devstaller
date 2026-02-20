@@ -1,0 +1,9 @@
+---
+title: Changelog for ckan-devstaller v0.3.2 (2026-02-20)
+---
+
+## Pin setuptools and update pip install URLs
+
+The `egg=<pkg>` URL fragment `pip install` method has been deprecated and we have updated the installation URLs as per https://github.com/pypa/pip/issues/13157.
+
+We have also pinned `setuptools` to version `81.0.0` for now as "setuptools 82... prevents CKAN to start" as per https://github.com/ckan/ckan/issues/9246.
