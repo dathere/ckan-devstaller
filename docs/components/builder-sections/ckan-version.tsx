@@ -11,26 +11,26 @@ export default function CKANVersionBuilderSection({ config, setConfig }: any) {
       <Cards>
         <Card
           icon={<SailboatIcon />}
-          title="2.11.4"
+          title="2.11.5"
           className={
-            config.ckanVersion === "2.11.4"
+            config.ckanVersion === "2.11.5"
               ? selectedCardClasses
               : "cursor-pointer"
           }
           onClick={() => {
-            setConfig({ ...config, ckanVersion: "2.11.4" });
+            setConfig({ ...config, ckanVersion: "2.11.5" });
           }}
         ></Card>
         <Card
           icon={<SailboatIcon />}
-          title="2.10.9"
+          title="2.10.10"
           className={
-            config.ckanVersion === "2.10.9"
+            config.ckanVersion === "2.10.10"
               ? selectedCardClasses
               : "cursor-pointer"
           }
           onClick={() => {
-            setConfig({ ...config, ckanVersion: "2.10.9" });
+            setConfig({ ...config, ckanVersion: "2.10.10" });
           }}
         ></Card>
       </Cards>

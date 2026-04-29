@@ -18,8 +18,8 @@ export default function PresetsBuilderSection({
         <Card
           className={
             config.preset === "ckan-only" &&
-            config.extensions.length === 0 &&
-            config.features.length === 0
+              config.extensions.length === 0 &&
+              config.features.length === 0
               ? selectedCardClasses
               : "cursor-pointer"
           }
@@ -49,7 +49,7 @@ export default function PresetsBuilderSection({
             setConfig({
               ...config,
               preset: "dathere-default",
-              ckanVersion: "2.11.4",
+              ckanVersion: "2.11.5",
               extensions: ["ckanext-scheming", "DataStore", "DataPusher+"],
               features: ["enable-ssh"],
             });

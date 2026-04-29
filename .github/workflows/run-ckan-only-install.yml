@@ -23,4 +23,4 @@ jobs:
         with:
           workspaces: ". -> target"
       - name: Run ckan-devstaller
-        run: cargo run --release --verbose -- --ckan-version 2.11.4 --skip-interactive --skip-run
+        run: cargo run --release --verbose -- --ckan-version 2.11.5 --skip-interactive --skip-run

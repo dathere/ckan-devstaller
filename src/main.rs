@@ -113,7 +113,7 @@ rm -rf README ckan-compose ahoy dpp_default_config.ini get-docker.sh permissions
         ckan_version: if args.ckan_version.is_some() {
             args.ckan_version.unwrap()
         } else {
-            "2.11.4".to_string()
+            "2.11.5".to_string()
         },
         sysadmin: default_sysadmin.clone(),
         extension_datastore: args

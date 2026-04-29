@@ -22,9 +22,9 @@ skip_interactive=$2
 
 if [ $preset == "dathere-default" ]; then
     if [ $skip_interactive == "skip-interactive" ]; then
-        ./ckan-devstaller --ckan-version 2.11.4 --extensions ckanext-scheming DataStore DataPusher+ --features enable-ssh --skip-interactive
+        ./ckan-devstaller --ckan-version 2.11.5 --extensions ckanext-scheming DataStore DataPusher+ --features enable-ssh --skip-interactive
     else
-        ./ckan-devstaller --ckan-version 2.11.4 --extensions ckanext-scheming DataStore DataPusher+ --features enable-ssh
+        ./ckan-devstaller --ckan-version 2.11.5 --extensions ckanext-scheming DataStore DataPusher+ --features enable-ssh
     fi
 else
     if [ $preset == "skip-interactive" ]; then

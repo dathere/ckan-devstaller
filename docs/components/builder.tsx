@@ -41,7 +41,7 @@ sudo chmod +x ./ckan-devstaller\n\n# Run ckan-devstaller script\n`;
   const [command, setCommand] = useState("./ckan-devstaller");
   const [config, setConfig] = useState<Config>({
     preset: "ckan-only",
-    ckanVersion: "2.11.4",
+    ckanVersion: "2.11.5",
     extensions: [],
     features: [],
   });
