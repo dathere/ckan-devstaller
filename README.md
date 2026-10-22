@@ -1,5 +1,7 @@
 # ckan-devstaller
 
+# This repository has been archived for now and is not recommended for production usage. See https://github.com/dathere/ckan-devstaller/discussions/13 for more info.
+
 <a href="https://ckan-devstaller.dathere.com"><img width="1165" height="668" alt="{1329F0BA-A29F-4BF8-BB6B-E3BA84FDAFCC}" src="https://github.com/user-attachments/assets/8f0cc4ef-d90d-4715-ba21-9083dff0c3ff" /></a>
 
 
@@ -39,3 +41,35 @@ You may find the following guides useful while developing with CKAN:
 
 ### Installation (sped up)
 ![ckan-devstaller-demo](https://github.com/user-attachments/assets/9fc388ab-e044-4453-ae49-7d7f31065fe3)
+
+## Running tests
+
+Tests may be run by default with:
+
+```bash
+cargo test
+```
+
+### Docker container tests
+
+There may be tests that use [testcontainers-rs](https://rust.testcontainers.org/) which require Docker to be installed on your system. To run these tests, run:
+
+```bash
+cargo test -F testcontainers
+```
+
+You can also show any `print` statement output with the `--nocapture` flag:
+
+```bash
+cargo test -F testcontainers -- --nocapture
+```
+
+You can also add the following to your `.vscode/settings.json` file to allow the rust-analyzer extension to analyze the code related to the `testcontainers` feature:
+
+```json
+{
+    "rust-analyzer.cargo.features": [
+        "testcontainers"
+    ]
+}
+```
